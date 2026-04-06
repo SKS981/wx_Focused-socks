@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Friend - 专注助手</title>
+    <title>专注伙伴 - Focus Friend</title>
     <style>
-        /* 全局样式 */
         * {
             margin: 0;
             padding: 0;
@@ -16,660 +15,1091 @@
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
             color: #333;
         }
 
-        /* 容器 */
+        /* 主容器 */
         .container {
             max-width: 600px;
-            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #4CAF50;
+        }
+
+        /* Tab栏 */
+        .tab-bar {
+            display: flex;
+            justify-content: space-around;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
+            padding: 10px;
             margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* 标题 */
-        h1 {
+        .tab-item {
+            flex: 1;
             text-align: center;
-            color: #ff6b6b;
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-
-        /* 番茄钟区域 */
-        .timer-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .timer-display {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: #4ecdc4;
-            margin: 20px 0;
-            background: #f8f9fa;
+            padding: 12px;
             border-radius: 15px;
-            padding: 20px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .timer-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .timer-controls button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        #startBtn {
-            background: #4ecdc4;
+        .tab-item.active {
+            background: #4CAF50;
             color: white;
-        }
-
-        #pauseBtn {
-            background: #ffd93d;
-            color: #333;
-        }
-
-        #resetBtn {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .timer-controls button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 时间设置 */
-        .time-settings {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .time-setting {
-            text-align: center;
-        }
-
-        .time-setting label {
-            display: block;
-            margin-bottom: 5px;
             font-weight: bold;
-            color: #666;
         }
 
-        .time-setting input {
-            width: 80px;
-            padding: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1rem;
+        /* 页面内容 */
+        .page-content {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
 
-        /* 角色区域 */
-        .character-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .character-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            background: #f8f9fa;
-            border-radius: 50%;
+        /* 专注页 */
+        .focus-page {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 角色动画区 */
+        .character-area {
+            margin: 30px 0;
+            text-align: center;
         }
 
         .character {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-            position: relative;
-            transition: all 0.3s ease;
+            object-fit: cover;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
         }
 
-        .character::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 30px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 60px 0 0 white;
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
-        .character::after {
-            content: '';
-            position: absolute;
-            top: 80px;
-            left: 55px;
-            width: 40px;
-            height: 20px;
-            border-radius: 20px;
-            background: #ff6b6b;
+        .character-status {
+            font-size: 18px;
+            color: #666;
         }
 
-        .character.happy::after {
-            height: 25px;
-            border-radius: 0 0 40px 40px;
-            background: #4ecdc4;
-        }
-
-        /* 装扮系统 */
-        .dress-up-section {
-            margin-bottom: 40px;
-        }
-
-        .dress-up-section h2 {
+        /* 计时器 */
+        .timer-container {
             text-align: center;
-            color: #4ecdc4;
+            margin: 30px 0;
+        }
+
+        .timer-display {
+            font-size: 60px;
+            font-weight: bold;
+            color: #333;
             margin-bottom: 20px;
         }
 
-        .outfits {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .outfit {
-            width: 80px;
-            height: 80px;
-            border-radius: 15px;
-            border: 2px solid #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .timer-controls {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .outfit:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .outfit.selected {
-            border-color: #4ecdc4;
-            box-shadow: 0 0 15px rgba(78, 205, 196, 0.5);
-        }
-
-        .outfit:nth-child(1) {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-        }
-
-        .outfit:nth-child(2) {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
-
-        .outfit:nth-child(3) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .outfit:nth-child(4) {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        /* 广告区域 */
-        .ad-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .ad-section h3 {
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .ad-content {
+        .timer-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .ad-content p {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .ad-button {
-            padding: 10px 20px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
+            font-size: 24px;
             font-weight: bold;
+            color: #4CAF50;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .ad-button:hover {
-            background: #ff5252;
-            transform: translateY(-2px);
+        .timer-btn:hover {
+            background: #4CAF50;
+            color: white;
         }
 
-        /* 统计信息 */
-        .stats-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .stats-section h2 {
+        .time-setting {
+            font-size: 20px;
+            min-width: 100px;
             text-align: center;
-            color: #4ecdc4;
+        }
+
+        /* 音效设置 */
+        .sound-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        /* 按钮 */
+        .btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #FFC107;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #F44336;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 装扮页 */
+        .shop-page {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-tab-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .sub-tab-item {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #f5f5f5;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .sub-tab-item.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        /* 房间网格 */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 15px;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ddd;
+            cursor: pointer;
+        }
+
+        .grid-cell.filled {
+            border: 2px solid #4CAF50;
+        }
+
+        .furniture {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* 商品列表 */
+        .goods-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .goods-item {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goods-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .goods-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .goods-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .goods-price {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* 我的页 */
+        .profile-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .user-info {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 15px;
         }
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
+        .user-stats {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
         }
 
-        .stat-item {
+        .stat-card {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
             text-align: center;
         }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 24px;
             font-weight: bold;
-            color: #ff6b6b;
+            color: #4CAF50;
         }
 
         .stat-label {
+            font-size: 14px;
             color: #666;
-            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* 成就徽章 */
+        .achievements {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .achievement-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .achievement-item {
+            aspect-ratio: 1;
+            background: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* 弹窗 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         /* 响应式设计 */
         @media (max-width: 480px) {
             .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
+                padding: 10px;
             }
 
             .timer-display {
-                font-size: 2.5rem;
+                font-size: 48px;
             }
 
-            .timer-controls {
-                flex-direction: column;
-                align-items: center;
+            .goods-list {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .timer-controls button {
-                width: 200px;
-            }
-
-            .time-settings {
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .outfits {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .stats {
-                flex-direction: column;
-                gap: 10px;
+            .achievement-list {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
-        /* 动画效果 */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .character.bounce {
-            animation: bounce 2s infinite;
+        /* 隐藏类 */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Focus Friend</h1>
-        
-        <!-- 番茄钟区域 -->
-        <div class="timer-section">
-            <h2>番茄钟</h2>
-            <div class="timer-display" id="timer">25:00</div>
-            <div class="timer-controls">
-                <button id="startBtn">开始</button>
-                <button id="pauseBtn" disabled>暂停</button>
-                <button id="resetBtn">重置</button>
+        <!-- 页面标题 -->
+        <h1 class="page-title">专注伙伴</h1>
+
+        <!-- Tab栏 -->
+        <div class="tab-bar">
+            <div class="tab-item active" data-tab="focus">专注</div>
+            <div class="tab-item" data-tab="shop">装扮</div>
+            <div class="tab-item" data-tab="profile">我的</div>
+        </div>
+
+        <!-- 专注页 -->
+        <div class="page-content focus-page" id="focusPage">
+            <!-- 角色动画区 -->
+            <div class="character-area">
+                <img class="character" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20sitting%20and%20smiling%2C%20warm%20colors%2C%20simple%20style&image_size=square" alt="专注伙伴">
+                <div class="character-status" id="characterStatus">准备开始</div>
             </div>
-            <div class="time-settings">
-                <div class="time-setting">
-                    <label for="workTime">工作时间 (分钟)</label>
-                    <input type="number" id="workTime" value="25" min="1" max="60">
+
+            <!-- 计时器 -->
+            <div class="timer-container">
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" id="decreaseBtn">-</button>
+                    <div class="time-setting" id="timeSetting">25分钟</div>
+                    <button class="timer-btn" id="increaseBtn">+</button>
                 </div>
-                <div class="time-setting">
-                    <label for="breakTime">休息时间 (分钟)</label>
-                    <input type="number" id="breakTime" value="5" min="1" max="30">
+            </div>
+
+            <!-- 音效设置 -->
+            <div class="sound-setting">
+                <span>音效</span>
+                <label class="switch">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="startBtn">开始专注</button>
+                <div class="hidden" id="focusingButtons">
+                    <button class="btn btn-secondary" id="pauseBtn">暂停</button>
+                    <button class="btn btn-danger" id="giveUpBtn">放弃</button>
                 </div>
             </div>
         </div>
-        
-        <!-- 角色区域 -->
-        <div class="character-section">
-            <h2>我的伙伴</h2>
-            <div class="character-container">
-                <div class="character" id="character"></div>
+
+        <!-- 装扮页 -->
+        <div class="page-content shop-page hidden" id="shopPage">
+            <!-- 子Tab栏 -->
+            <div class="sub-tab-bar">
+                <div class="sub-tab-item active" data-subtab="room">我的房间</div>
+                <div class="sub-tab-item" data-subtab="shop">商店</div>
+                <div class="sub-tab-item" data-subtab="inventory">我的物品</div>
             </div>
-            <p id="characterStatus">准备就绪！</p>
-        </div>
-        
-        <!-- 装扮系统 -->
-        <div class="dress-up-section">
-            <h2>装扮系统</h2>
-            <div class="outfits">
-                <div class="outfit selected" data-outfit="1"></div>
-                <div class="outfit" data-outfit="2"></div>
-                <div class="outfit" data-outfit="3"></div>
-                <div class="outfit" data-outfit="4"></div>
+
+            <!-- 房间展示 -->
+            <div id="roomSection">
+                <h3 style="text-align: center; margin-bottom: 20px;">我的房间</h3>
+                <div class="room-grid" id="roomGrid">
+                    <!-- 网格单元格将通过JS动态生成 -->
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                    <button class="btn btn-secondary" style="flex: 1; max-width: 150px;" id="changeWallpaperBtn">更换壁纸</button>
+                    <button class="btn btn-secondary" style="flex: 1; max-width: 150px;" id="arrangeFurnitureBtn">摆放家具</button>
+                </div>
+            </div>
+
+            <!-- 商店 -->
+            <div class="hidden" id="shopSection">
+                <h3 style="text-align: center; margin-bottom: 20px;">商店</h3>
+                <div class="sub-tab-bar">
+                    <div class="sub-tab-item active" data-category="furniture">家具</div>
+                    <div class="sub-tab-item" data-category="wallpaper">壁纸</div>
+                    <div class="sub-tab-item" data-category="plant">植物</div>
+                </div>
+                <div class="goods-list" id="goodsList">
+                    <!-- 商品将通过JS动态生成 -->
+                </div>
+                <button class="btn btn-primary" style="margin-top: 20px;" id="watchAdBtn">看广告领随机奖励</button>
+            </div>
+
+            <!-- 我的物品 -->
+            <div class="hidden" id="inventorySection">
+                <h3 style="text-align: center; margin-bottom: 20px;">我的物品</h3>
+                <div class="goods-list" id="inventoryList">
+                    <!-- 物品将通过JS动态生成 -->
+                </div>
             </div>
         </div>
-        
-        <!-- 广告区域 -->
-        <div class="ad-section">
-            <h3>广告</h3>
-            <div class="ad-content">
-                <p>想获得更多装扮？观看广告解锁！</p>
-                <button class="ad-button" id="watchAdBtn">观看广告</button>
+
+        <!-- 我的页 -->
+        <div class="page-content profile-page hidden" id="profilePage">
+            <!-- 用户信息 -->
+            <div class="user-info">
+                <img class="user-avatar" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=simple%20avatar%20icon%2C%20cartoon%20style%2C%20warm%20colors&image_size=square" alt="用户头像">
+                <h3 id="userName">用户</h3>
             </div>
-        </div>
-        
-        <!-- 统计信息 -->
-        <div class="stats-section">
-            <h2>统计信息</h2>
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-value" id="totalPomodoros">0</div>
-                    <div class="stat-label">完成的番茄数</div>
+
+            <!-- 统计信息 -->
+            <div class="user-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalFocusTime">0</div>
+                    <div class="stat-label">累计专注时长</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="totalTime">0</div>
-                    <div class="stat-label">专注时间 (分钟)</div>
+                <div class="stat-card">
+                    <div class="stat-value" id="focusCount">0</div>
+                    <div class="stat-label">完成次数</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="adViews">0</div>
-                    <div class="stat-label">广告观看次数</div>
+                <div class="stat-card">
+                    <div class="stat-value" id="socksBalance">0</div>
+                    <div class="stat-label">袜子余额</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="level">1</div>
+                    <div class="stat-label">等级</div>
+                </div>
+            </div>
+
+            <!-- 成就徽章 -->
+            <div class="achievements">
+                <h3 style="margin-bottom: 10px;">成就徽章</h3>
+                <div class="achievement-list" id="achievementList">
+                    <!-- 成就徽章将通过JS动态生成 -->
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div style="width: 100%; margin-top: 20px;">
+                <button class="btn btn-secondary" style="margin-bottom: 10px;" id="shareBtn">分享给好友</button>
+                <button class="btn btn-primary" id="watchAdRewardBtn">看广告领奖励</button>
             </div>
         </div>
     </div>
-    
+
+    <!-- 弹窗 -->
+    <div class="modal hidden" id="modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <p class="modal-message" id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-primary" id="modalConfirmBtn">确定</button>
+                <button class="modal-btn" id="modalCancelBtn">取消</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 全局变量
-        let timerInterval;
-        let timeLeft = 25 * 60; // 25分钟
-        let isRunning = false;
-        let isWorkTime = true;
-        let workTime = 25 * 60;
-        let breakTime = 5 * 60;
-        let totalPomodoros = 0;
-        let totalMinutes = 0;
-        let adViews = 0;
-        let selectedOutfit = 1;
-        
-        // DOM元素
-        const timerDisplay = document.getElementById('timer');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const workTimeInput = document.getElementById('workTime');
-        const breakTimeInput = document.getElementById('breakTime');
-        const character = document.getElementById('character');
-        const characterStatus = document.getElementById('characterStatus');
-        const watchAdBtn = document.getElementById('watchAdBtn');
-        const totalPomodorosElement = document.getElementById('totalPomodoros');
-        const totalTimeElement = document.getElementById('totalTime');
-        const adViewsElement = document.getElementById('adViews');
-        const outfits = document.querySelectorAll('.outfit');
-        
-        // 初始化
-        function init() {
-            loadData();
-            updateTimerDisplay();
-            updateStats();
-            updateCharacter();
-        }
-        
-        // 加载数据
-        function loadData() {
-            const savedData = localStorage.getItem('focusFriendData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                totalPomodoros = data.totalPomodoros || 0;
-                totalMinutes = data.totalMinutes || 0;
-                adViews = data.adViews || 0;
-                selectedOutfit = data.selectedOutfit || 1;
-                workTime = (data.workTime || 25) * 60;
-                breakTime = (data.breakTime || 5) * 60;
-                timeLeft = workTime;
-                
-                // 更新输入框
-                workTimeInput.value = Math.floor(workTime / 60);
-                breakTimeInput.value = Math.floor(breakTime / 60);
-                
-                // 更新选中的装扮
-                outfits.forEach(outfit => {
-                    if (parseInt(outfit.dataset.outfit) === selectedOutfit) {
-                        outfit.classList.add('selected');
-                    } else {
-                        outfit.classList.remove('selected');
-                    }
+        // 数据存储
+        const storage = {
+            get: (key, defaultValue = null) => {
+                const value = localStorage.getItem(key);
+                return value ? JSON.parse(value) : defaultValue;
+            },
+            set: (key, value) => {
+                localStorage.setItem(key, JSON.stringify(value));
+            }
+        };
+
+        // 初始化数据
+        const initData = () => {
+            // 用户数据
+            if (!storage.get('user')) {
+                storage.set('user', {
+                    name: '用户',
+                    socks: 0,
+                    totalFocusMinutes: 0,
+                    focusCount: 0,
+                    level: 1
                 });
             }
-        }
-        
-        // 保存数据
-        function saveData() {
-            const data = {
-                totalPomodoros,
-                totalMinutes,
-                adViews,
-                selectedOutfit,
-                workTime: Math.floor(workTime / 60),
-                breakTime: Math.floor(breakTime / 60)
+
+            // 物品数据
+            if (!storage.get('items')) {
+                storage.set('items', [
+                    { id: 1, name: '小桌子', type: 'furniture', price: 10, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=simple%20cartoon%20table%2C%20cute%20style%2C%20warm%20colors&image_size=square' },
+                    { id: 2, name: '小椅子', type: 'furniture', price: 8, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=simple%20cartoon%20chair%2C%20cute%20style%2C%20warm%20colors&image_size=square' },
+                    { id: 3, name: '绿植', type: 'plant', price: 5, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=simple%20cartoon%20plant%2C%20cute%20style%2C%20warm%20colors&image_size=square' },
+                    { id: 4, name: '蓝色壁纸', type: 'wallpaper', price: 15, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=light%20blue%20wallpaper%2C%20simple%20pattern&image_size=square' },
+                    { id: 5, name: '粉色壁纸', type: 'wallpaper', price: 15, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=light%20pink%20wallpaper%2C%20simple%20pattern&image_size=square' },
+                    { id: 6, name: '书架', type: 'furniture', price: 12, imageUrl: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=simple%20cartoon%20bookshelf%2C%20cute%20style%2C%20warm%20colors&image_size=square' }
+                ]);
+            }
+
+            // 用户物品
+            if (!storage.get('userItems')) {
+                storage.set('userItems', []);
+            }
+
+            // 房间数据
+            if (!storage.get('room')) {
+                storage.set('room', {
+                    wallpaper: 4, // 默认蓝色壁纸
+                    furniture: Array(9).fill(null) // 3x3网格
+                });
+            }
+
+            // 专注记录
+            if (!storage.get('focusSessions')) {
+                storage.set('focusSessions', []);
+            }
+        };
+
+        // 加载数据
+        const loadData = () => {
+            const user = storage.get('user');
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('totalFocusTime').textContent = user.totalFocusMinutes + '分钟';
+            document.getElementById('focusCount').textContent = user.focusCount;
+            document.getElementById('socksBalance').textContent = user.socks;
+            document.getElementById('level').textContent = user.level;
+        };
+
+        // 标签切换
+        const setupTabSwitching = () => {
+            const tabItems = document.querySelectorAll('.tab-item');
+            const pages = {
+                focus: document.getElementById('focusPage'),
+                shop: document.getElementById('shopPage'),
+                profile: document.getElementById('profilePage')
             };
-            localStorage.setItem('focusFriendData', JSON.stringify(data));
-        }
-        
-        // 更新计时器显示
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        // 更新统计信息
-        function updateStats() {
-            totalPomodorosElement.textContent = totalPomodoros;
-            totalTimeElement.textContent = totalMinutes;
-            adViewsElement.textContent = adViews;
-        }
-        
-        // 更新角色状态
-        function updateCharacter() {
-            // 清除所有类
-            character.className = 'character';
-            
-            // 添加选中的装扮
-            character.classList.add(`outfit-${selectedOutfit}`);
-            
-            // 根据状态添加不同的类
-            if (isRunning) {
-                character.classList.add('bounce');
-                characterStatus.textContent = isWorkTime ? '一起专注吧！' : '休息一下！';
-            } else {
-                characterStatus.textContent = '准备就绪！';
-            }
-        }
-        
-        // 开始计时器
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                startBtn.disabled = true;
-                pauseBtn.disabled = false;
-                
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    updateTimerDisplay();
+
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
                     
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        isRunning = false;
-                        startBtn.disabled = false;
-                        pauseBtn.disabled = true;
-                        
-                        // 完成一个番茄钟
-                        if (isWorkTime) {
-                            totalPomodoros++;
-                            totalMinutes += Math.floor(workTime / 60);
-                            character.classList.add('happy');
-                            characterStatus.textContent = '完成！休息一下吧！';
-                            isWorkTime = false;
-                            timeLeft = breakTime;
-                        } else {
-                            characterStatus.textContent = '休息结束，开始新的专注！';
-                            isWorkTime = true;
-                            timeLeft = workTime;
-                        }
-                        
-                        updateStats();
-                        saveData();
-                        updateTimerDisplay();
+                    // 更新标签状态
+                    tabItems.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 显示对应页面
+                    Object.values(pages).forEach(page => page.classList.add('hidden'));
+                    pages[tabName].classList.remove('hidden');
+                    
+                    // 加载页面数据
+                    if (tabName === 'shop') {
+                        loadShopData();
+                    } else if (tabName === 'profile') {
+                        loadData();
                     }
-                }, 1000);
-                
-                updateCharacter();
-            }
-        }
-        
-        // 暂停计时器
-        function pauseTimer() {
-            if (isRunning) {
-                isRunning = false;
-                clearInterval(timerInterval);
-                startBtn.disabled = false;
-                pauseBtn.disabled = true;
-                characterStatus.textContent = '已暂停';
-                updateCharacter();
-            }
-        }
-        
-        // 重置计时器
-        function resetTimer() {
-            isRunning = false;
-            clearInterval(timerInterval);
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-            isWorkTime = true;
-            timeLeft = workTime;
-            updateTimerDisplay();
-            characterStatus.textContent = '准备就绪！';
-            updateCharacter();
-        }
-        
-        // 模拟观看广告
-        function watchAd() {
-            adViews++;
-            updateStats();
-            saveData();
-            
-            // 显示广告观看成功消息
-            alert('广告观看成功！获得了新的装扮！');
-        }
-        
-        // 事件监听器
-        startBtn.addEventListener('click', startTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-        watchAdBtn.addEventListener('click', watchAd);
-        
-        // 工作时间和休息时间输入变化
-        workTimeInput.addEventListener('change', function() {
-            const value = parseInt(this.value) || 25;
-            workTime = value * 60;
-            if (isWorkTime && !isRunning) {
-                timeLeft = workTime;
-                updateTimerDisplay();
-            }
-            saveData();
-        });
-        
-        breakTimeInput.addEventListener('change', function() {
-            const value = parseInt(this.value) || 5;
-            breakTime = value * 60;
-            if (!isWorkTime && !isRunning) {
-                timeLeft = breakTime;
-                updateTimerDisplay();
-            }
-            saveData();
-        });
-        
-        // 装扮选择
-        outfits.forEach(outfit => {
-            outfit.addEventListener('click', function() {
-                outfits.forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedOutfit = parseInt(this.dataset.outfit);
-                updateCharacter();
-                saveData();
+                });
             });
-        });
-        
-        // 初始化应用
-        init();
+        };
+
+        // 装扮页子标签切换
+        const setupShopSubTabs = () => {
+            const subTabItems = document.querySelectorAll('[data-subtab]');
+            const sections = {
+                room: document.getElementById('roomSection'),
+                shop: document.getElementById('shopSection'),
+                inventory: document.getElementById('inventorySection')
+            };
+
+            subTabItems.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.subtab;
+                    
+                    // 更新标签状态
+                    subTabItems.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 显示对应 section
+                    Object.values(sections).forEach(section => section.classList.add('hidden'));
+                    sections[tabName].classList.remove('hidden');
+                    
+                    // 加载数据
+                    if (tabName === 'room') {
+                        loadRoomData();
+                    } else if (tabName === 'shop') {
+                        loadGoodsData('furniture');
+                    } else if (tabName === 'inventory') {
+                        loadInventoryData();
+                    }
+                });
+            });
+        };
+
+        // 商店分类切换
+        const setupCategoryTabs = () => {
+            const categoryTabs = document.querySelectorAll('[data-category]');
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const category = tab.dataset.category;
+                    
+                    // 更新标签状态
+                    categoryTabs.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 加载对应分类的商品
+                    loadGoodsData(category);
+                });
+            });
+        };
+
+        // 加载房间数据
+        const loadRoomData = () => {
+            const room = storage.get('room');
+            const roomGrid = document.getElementById('roomGrid');
+            roomGrid.innerHTML = '';
+            
+            room.furniture.forEach((itemId, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                if (itemId) {
+                    cell.classList.add('filled');
+                    const item = storage.get('items').find(i => i.id === itemId);
+                    if (item) {
+                        const img = document.createElement('img');
+                        img.src = item.imageUrl;
+                        img.className = 'furniture';
+                        cell.appendChild(img);
+                    }
+                }
+                cell.addEventListener('click', () => {
+                    if (!itemId) {
+                        // 可以在这里添加放置家具的逻辑
+                        showModal('提示', '请先在商店购买家具，然后在"我的物品"中选择要放置的家具');
+                    }
+                });
+                roomGrid.appendChild(cell);
+            });
+        };
+
+        // 加载商品数据
+        const loadGoodsData = (category) => {
+            const items = storage.get('items').filter(item => item.type === category);
+            const userItems = storage.get('userItems');
+            const goodsList = document.getElementById('goodsList');
+            goodsList.innerHTML = '';
+            
+            items.forEach(item => {
+                const isOwned = userItems.some(ui => ui.id === item.id);
+                const goodsItem = document.createElement('div');
+                goodsItem.className = 'goods-item';
+                goodsItem.innerHTML = `
+                    <img class="goods-image" src="${item.imageUrl}" alt="${item.name}">
+                    <div class="goods-name">${item.name}</div>
+                    <div class="goods-price">
+                        <span>🧦</span> ${item.price}
+                    </div>
+                    ${isOwned ? '<div style="color: #4CAF50; font-size: 12px; margin-top: 5px;">已拥有</div>' : ''}
+                `;
+                goodsItem.addEventListener('click', () => {
+                    if (isOwned) {
+                        showModal('提示', '您已经拥有此物品');
+                    } else {
+                        showBuyModal(item);
+                    }
+                });
+                goodsList.appendChild(goodsItem);
+            });
+        };
+
+        // 加载我的物品数据
+        const loadInventoryData = () => {
+            const userItems = storage.get('userItems');
+            const items = storage.get('items');
+            const inventoryList = document.getElementById('inventoryList');
+            inventoryList.innerHTML = '';
+            
+            userItems.forEach(userItem => {
+                const item = items.find(i => i.id === userItem.id);
+                if (item) {
+                    const inventoryItem = document.createElement('div');
+                    inventoryItem.className = 'goods-item';
+                    inventoryItem.innerHTML = `
+                        <img class="goods-image" src="${item.imageUrl}" alt="${item.name}">
+                        <div class="goods-name">${item.name}</div>
+                        <div class="goods-price">数量: ${userItem.quantity}</div>
+                    `;
+                    inventoryItem.addEventListener('click', () => {
+                        if (item.type === 'furniture') {
+                            showModal('提示', '请在"我的房间"中点击空白格子来放置家具');
+                        } else if (item.type === 'wallpaper') {
+                            changeWallpaper(item.id);
+                        }
+                    });
+                    inventoryList.appendChild(inventoryItem);
+                }
+            });
+        };
+
+        // 购买商品
+        const buyItem = (item) => {
+            const user = storage.get('user');
+            if (user.socks >= item.price) {
+                // 扣除袜子
+                user.socks -= item.price;
+                storage.set('user', user);
+                
+                // 添加到用户物品
+                const userItems = storage.get('userItems');
+                const existingItem = userItems.find(ui => ui.id === item.id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    userItems.push({ id: item.id, quantity: 1 });
+                }
+                storage.set('userItems', userItems);
+                
+                showModal('成功', `购买${item.name}成功！`);
+                loadData();
+                loadGoodsData(item.type);
+            } else {
+                showModal('提示', '袜子不足，无法购买');
+            }
+        };
+
+        // 更换壁纸
+        const changeWallpaper = (wallpaperId) => {
+            const room = storage.get('room');
+            room.wallpaper = wallpaperId;
+            storage.set('room', room);
+            showModal('成功', '壁纸更换成功！');
+            loadRoomData();
+        };
+
+        // 计时器功能
+        let timer = null;
+        let remainingTime = 25 * 60; // 默认25分钟
+        let focusTime = 25;
+        let isFocusing = false;
+        let isPaused = false;
+
+        const updateTimerDisplay = () => {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            document.getElementById('timerDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        const startTimer = () => {
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+                
+                if (remainingTime <= 0) {
+                    completeFocus();
+                }
+            }, 1000);
+        };
+
+        const startFocus = () => {
+            isFocusing = true;
+            isPaused = false;
+            remainingTime = focusTime * 60;
+            updateTimerDisplay();
+            
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('focusingButtons').classList.remove('hidden');
+            document.getElementById('characterStatus').textContent = '专注中...';
+            document.querySelector('.character').src = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20working%20hard%2C%20warm%20colors%2C%20simple%20style&image_size=square';
+            
+            startTimer();
+        };
+
+        const pauseFocus = () => {
+            isPaused = true;
+            clearInterval(timer);
+            document.getElementById('characterStatus').textContent = '已暂停';
+            showModal('暂停', '专注已暂停，是否继续？', '继续', '放弃', () => {
+                isPaused = false;
+                startTimer();
+                document.getElementById('characterStatus').textContent = '专注中...';
+            }, giveUpFocus);
+        };
+
+        const giveUpFocus = () => {
+            isFocusing = false;
+            isPaused = false;
+            clearInterval(timer);
+            remainingTime = focusTime * 60;
+            updateTimerDisplay();
+            
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('focusingButtons').classList.add('hidden');
+            document.getElementById('characterStatus').textContent = '有点难过';
+            document.querySelector('.character').src = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20sad%2C%20warm%20colors%2C%20simple%20style&image_size=square';
+        };
+
+        const completeFocus = () => {
+            isFocusing = false;
+            clearInterval(timer);
+            
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('focusingButtons').classList.add('hidden');
+            document.getElementById('characterStatus').textContent = '完成！';
+            document.querySelector('.character').src = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20happy%20and%20excited%2C%20warm%20colors%2C%20simple%20style&image_size=square';
+            
+            // 计算奖励
+            const reward = Math.floor(focusTime / 5);
+            const user = storage.get('user');
+            user.socks += reward;
+            user.totalFocusMinutes += focusTime;
+            user.focusCount++;
+            
+            // 升级逻辑
+            const newLevel = Math.floor(user.totalFocusMinutes / 60) + 1;
+            if (newLevel > user.level) {
+                user.level = newLevel;
+                showModal('升级', `恭喜升级到${newLevel}级！`);
+            }
+            
+            storage.set('user', user);
+            loadData();
+            
+            // 保存专注记录
+            const sessions = storage.get('focusSessions');
+            sessions.push({
+                startTime: new Date().toISOString(),
+                duration: focusTime,
+                reward: reward,
+                completed: true
+            });
+            storage.set('focusSessions', sessions);
+            
+            // 显示完成弹窗
+            showModal('专注完成', `恭喜完成${focusTime}分钟的专注！获得${reward}个袜子。`, '确定', '看广告双倍奖励', null, () => {
+                // 双倍奖励
+                user.socks += reward;
+                storage.set('user', user);
+                loadData();
+                showModal('成功', `获得双倍奖励！总共获得${reward * 2}个袜子。`);
+            });
+        };
+
+        // 时间设置
+        const setupTimeControls = () => {
+            document.getElementById('increaseBtn').addEventListener('click', () => {
+                if (!isFocusing && focusTime < 120) {
+                    focusTime += 5;
+                    remainingTime = focusTime * 60;
+                    updateTimerDisplay();
+                    document.getElementById('timeSetting').textContent = `${focusTime}分钟`;
+                }
+            });
+            
+            document.getElementById('decreaseBtn').addEventListener('click', () => {
+                if (!isFocusing && focusTime > 1) {
+                    focusTime -= 5;
+                    remainingTime = focusTime * 60;
+                    updateTimerDisplay();
+                    document.getElementById('timeSetting').textContent = `${focusTime}分钟`;
+                }
+            });
+        };
+
+        // 音效设置
+        const setupSoundControl = () => {
+            document.getElementById('soundToggle').addEventListener('change', (e) => {
+                const soundEnabled = e.target.checked;
+                // 这里可以添加音效控制逻辑
+            });
+        };
+
+        // 广告功能
+        const setupAdFunctions = () => {
+            // 商店页广告
+            document.getElementById('watchAdBtn').addEventListener('click', () => {
+                showModal('广告', '观看广告获得随机奖励', '取消', '观看', null, () => {
+                    // 模拟广告观看
+                    const reward = Math.floor(Math.random() * 5) + 1;
+                    const user = storage.get('user');
+                    user.socks += reward;
+                    storage.set('user', user);
+                    loadData();
+                    showModal('成功', `获得${reward}个袜子！`);
+                });
+            });
+            
+            // 我的页广告
+            document.getElementById('watchAdRewardBtn').addEventListener('click', () => {
+                showModal('广告', '观看广告获得额外袜子礼包', '取消', '观看', null, () => {
+                    // 模拟广告观看
+                    const reward = Math.floor(Math.random() * 10) + 5;
+                    const user = storage.get('user');
+                    user.socks += reward;
+                    storage.set('user', user);
+                    loadData();
+                    showModal('成功', `获得${reward}个袜子！`);
+                });
+            });
+        };
+
+        // 分享功能
+        const setupShareFunction = () => {
+            document.getElementById('shareBtn').addEventListener('click', () => {
+                showModal('分享', '分享给好友，一起专注！', '取消', '复制链接', null, () => {
+                    // 模拟复制链接
+                    navigator.clipboard.writeText(window.location.href);
+                    showModal('成功', '链接已复制到剪贴板！');
+                });
+            });
+        };
+
+        // 弹窗功能
+        const showModal = (title, message, confirmText = '确定', cancelText = '取消', onConfirm = null, onCancel = null) => {
+            const modal = document.getElementById('modal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalConfirmBtn').textContent = confirmText;
+            document.getElementById('modalCancelBtn').textContent = cancelText;
+            
+            modal.classList.remove('hidden');
+            
+            document.getElementById('modalConfirmBtn').onclick = () => {
+                modal.classList.add('hidden');
+                if (onConfirm) onConfirm();
+            };
+            
+            document.getElementById('modalCancelBtn').onclick = () => {
+                modal.classList.add('hidden');
+                if (onCancel) onCancel();
+            };
+        };
+
+        // 购买弹窗
+        const showBuyModal = (item) => {
+            const user = storage.get('user');
+            showModal(
+                '购买', 
+                `确定要花费${item.price}个袜子购买${item.name}吗？`, 
+                '取消', 
+                '购买', 
+                null, 
+                () => buyItem(item)
+            );
+        };
+
+        // 初始化
+        const init = () => {
+            initData();
+            loadData();
+            setupTabSwitching();
+            setupShopSubTabs();
+            setupCategoryTabs();
+            setupTimeControls();
+            setupSoundControl();
+            setupAdFunctions();
+            setupShareFunction();
+            
+            // 设置按钮事件
+            document.getElementById('startBtn').addEventListener('click', startFocus);
+            document.getElementById('pauseBtn').addEventListener('click', pauseFocus);
+            document.getElementById('giveUpBtn').addEventListener('click', giveUpFocus);
+            
+            // 初始化房间
+            loadRoomData();
+        };
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
