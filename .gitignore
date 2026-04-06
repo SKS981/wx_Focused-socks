@@ -1,24 +1,23 @@
 # 微信小程序相关文件
+miniprogram/
+cloudfunctions/
 project.config.json
 project.private.config.json
 
-# 云函数相关
-cloudfunctions/
-
 # 临时文件
-*.tmp
-*.temp
-
-# 日志文件
 *.log
+*.swp
+*.swo
 
-# IDE相关
-.vscode/
-.idea/
-
-# 操作系统相关
-Thumbs.db
+# 操作系统文件
 .DS_Store
+Thumbs.db
 
-# 依赖管理
-node_modules/
+# 文档文件
+操作手册.md
+流程图.png
+页面结构、产品手册.txt
+web_小程序.txt
+
+# 脚本文件
+uploadCloudFunction.sh
