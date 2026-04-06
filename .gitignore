@@ -1,0 +1,24 @@
+# 微信小程序相关文件
+project.config.json
+project.private.config.json
+
+# 云函数相关
+cloudfunctions/
+
+# 临时文件
+*.tmp
+*.temp
+
+# 日志文件
+*.log
+
+# IDE相关
+.vscode/
+.idea/
+
+# 操作系统相关
+Thumbs.db
+.DS_Store
+
+# 依赖管理
+node_modules/
