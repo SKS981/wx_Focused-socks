@@ -82,28 +82,27 @@
             overflow: hidden;
         }
 
-        /* 2.5D拼豆房间场景 */
+        /* 2.5D等距房间场景 */
         .perler-room {
             width: 100%;
-            height: 400px;
-            background: linear-gradient(135deg, #FFE4C4 0%, #FFDAB9 50%, #DEB887 100%);
+            height: 450px;
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%);
             border-radius: 20px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             margin-bottom: 20px;
-            perspective: 1200px;
         }
 
-        /* 2.5D房间地板 */
+        /* 等距地板 */
         .room-floor {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 45%;
-            background: linear-gradient(135deg, #D2691E 0%, #8B4513 100%);
+            height: 50%;
+            background: linear-gradient(135deg, #FFCC80 0%, #FFB74D 100%);
             border-radius: 0 0 20px 20px;
-            transform: rotateX(30deg) translateY(30px);
+            transform: skewY(-15deg) translateY(50px);
             transform-origin: bottom;
             box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
         }
@@ -115,32 +114,44 @@
             width: 100%;
             height: 100%;
             background: repeating-linear-gradient(
-                90deg,
+                45deg,
                 transparent,
-                transparent 24px,
-                rgba(0,0,0,0.08) 24px,
-                rgba(0,0,0,0.08) 25px
+                transparent 20px,
+                rgba(0,0,0,0.05) 20px,
+                rgba(0,0,0,0.05) 22px
             );
         }
 
-        /* 2.5D窗户 */
+        /* 墙壁 */
+        .room-wall {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            transform: skewY(15deg) translateY(-20px);
+            transform-origin: top;
+        }
+
+        /* 窗户 */
         .window {
             position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 100px;
-            height: 120px;
+            top: 60px;
+            right: 60px;
+            width: 120px;
+            height: 100px;
             background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
-            border: 5px solid #8B4513;
+            border: 4px solid #8B4513;
             border-radius: 5px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            transform: perspective(600px) rotateY(-30deg) translateZ(20px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: skewY(15deg);
         }
 
         .window::before {
             content: '';
             position: absolute;
-            width: 5px;
+            width: 4px;
             height: 100%;
             background: #8B4513;
             left: 50%;
@@ -151,53 +162,104 @@
             content: '';
             position: absolute;
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: #8B4513;
             top: 50%;
             transform: translateY(-50%);
         }
 
-        /* 2.5D拼豆工作台 */
+        /* 空调 */
+        .air-conditioner {
+            position: absolute;
+            top: 20px;
+            right: 60px;
+            width: 120px;
+            height: 30px;
+            background: #E0E0E0;
+            border: 3px solid #BDBDBD;
+            border-radius: 5px;
+            transform: skewY(15deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .air-conditioner::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10px;
+            right: 10px;
+            height: 10px;
+            background: #BDBDBD;
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* 植物 */
+        .plant {
+            position: absolute;
+            bottom: 80px;
+            left: 40px;
+            transform: skewY(-15deg);
+        }
+
+        .plant-pot {
+            width: 30px;
+            height: 20px;
+            background: #8D6E63;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .plant-leaves {
+            position: absolute;
+            top: -30px;
+            left: 5px;
+            width: 20px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* 等距工作台 */
         .workbench {
             position: absolute;
-            bottom: 100px;
+            bottom: 120px;
             left: 50%;
-            transform: translateX(-50%) perspective(600px) rotateX(15deg) translateZ(10px);
+            transform: translateX(-50%) skewY(-15deg);
             width: 200px;
-            height: 120px;
+            height: 80px;
             background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            border-radius: 5px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
 
         .workbench::before {
             content: '';
             position: absolute;
-            top: -12px;
-            left: 15px;
-            right: 15px;
-            height: 18px;
+            top: -10px;
+            left: 10px;
+            right: 10px;
+            height: 15px;
             background: #DEB887;
-            border-radius: 5px 5px 0 0;
-            box-shadow: 0 -3px 8px rgba(0,0,0,0.3);
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
         }
 
-        /* 拼豆板 */
+        /* 高分辨率拼豆板 */
         .perler-board {
             position: absolute;
-            top: -8px;
+            top: -5px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
-            height: 70px;
+            width: 100px;
+            height: 100px;
             background: #333;
             border-radius: 8px;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 2px;
-            padding: 3px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 1px;
+            padding: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .perler-bead {
@@ -206,23 +268,23 @@
             border-radius: 50%;
             background: #ddd;
             transition: all 0.3s ease;
-            box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
         }
 
         .perler-bead.filled {
-            box-shadow: inset -3px -3px 6px rgba(0,0,0,0.4);
+            box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4);
         }
 
-        /* 小土豆角色（增强版） */
+        /* 小土豆角色（等距视角） */
         .potato-character {
             position: absolute;
             width: 120px;
             height: 140px;
-            bottom: 80px;
+            bottom: 100px;
             left: 30%;
             transition: all 0.5s ease;
             z-index: 10;
-            transform-style: preserve-3d;
+            transform: skewY(-15deg);
         }
 
         /* 土豆身体 */
@@ -234,7 +296,6 @@
             border-radius: 50%;
             margin: 0 auto;
             box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-            transform: translateZ(10px);
         }
 
         /* 土豆眼睛 */
@@ -246,7 +307,6 @@
             border-radius: 50%;
             top: 30px;
             box-shadow: inset 0 0 0 4px #333, 0 2px 5px rgba(0,0,0,0.2);
-            transform: translateZ(20px);
         }
 
         .potato-eye.left { left: 20px; }
@@ -281,7 +341,6 @@
             border-radius: 50%;
             top: 55px;
             box-shadow: 0 1px 3px rgba(255, 105, 180, 0.5);
-            transform: translateZ(15px);
         }
 
         .potato-blush.left { left: 15px; }
@@ -296,7 +355,7 @@
             border-radius: 0 0 50% 50%;
             top: 60px;
             left: 50%;
-            transform: translateX(-50%) translateZ(10px);
+            transform: translateX(-50%);
         }
 
         /* 土豆手臂 */
@@ -309,17 +368,16 @@
             top: 45px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transform: translateZ(5px);
         }
 
         .potato-arm.left {
             left: -20px;
-            transform: rotate(-30deg) translateZ(5px);
+            transform: rotate(-30deg);
         }
 
         .potato-arm.right {
             right: -20px;
-            transform: rotate(30deg) translateZ(5px);
+            transform: rotate(30deg);
         }
 
         /* 土豆手部 */
@@ -350,7 +408,6 @@
             border-radius: 0 0 50% 50%;
             bottom: -20px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transform: translateZ(5px);
         }
 
         .potato-leg.left { left: 25px; }
@@ -386,25 +443,25 @@
         @keyframes potato-idle {
             0%, 100% { 
                 left: 20%; 
-                transform: scaleX(1) translateZ(10px);
+                transform: skewY(-15deg) scaleX(1);
             }
             25% { 
                 left: 50%; 
-                transform: scaleX(1) translateZ(10px);
+                transform: skewY(-15deg) scaleX(1);
             }
             50% { 
                 left: 80%; 
-                transform: scaleX(1) translateZ(10px);
+                transform: skewY(-15deg) scaleX(1);
             }
             75% { 
                 left: 50%; 
-                transform: scaleX(-1) translateZ(10px);
+                transform: skewY(-15deg) scaleX(-1);
             }
         }
 
         @keyframes potato-bounce {
-            0%, 100% { transform: translateY(0) scaleX(var(--scale-x, 1)) translateZ(10px); }
-            50% { transform: translateY(-10px) scaleX(var(--scale-x, 1)) translateZ(10px); }
+            0%, 100% { transform: translateY(0) scaleX(var(--scale-x, 1)); }
+            50% { transform: translateY(-10px) scaleX(var(--scale-x, 1)); }
         }
 
         .potato-character.idle {
@@ -418,23 +475,23 @@
         /* 专注状态 - 小土豆在工作台前拼豆 */
         .potato-character.focusing {
             left: 50% !important;
-            bottom: 160px !important;
-            transform: translateX(-50%) translateZ(20px) !important;
+            bottom: 180px !important;
+            transform: translateX(-50%) skewY(-15deg) !important;
             animation: none;
         }
 
         .potato-character.focusing .potato-arm.left {
-            transform: rotate(-60deg) translateY(-20px) translateZ(10px);
+            transform: rotate(-60deg) translateY(-20px);
         }
 
         .potato-character.focusing .potato-arm.right {
-            transform: rotate(60deg) translateY(-20px) translateZ(10px);
+            transform: rotate(60deg) translateY(-20px);
         }
 
         /* 拼豆动画 */
         @keyframes beading {
-            0%, 100% { transform: translateY(0) translateZ(5px); }
-            50% { transform: translateY(-8px) translateZ(5px); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .potato-character.focusing .potato-arm {
@@ -1456,11 +1513,14 @@
                         price: 0, 
                         owned: true,
                         colors: [
-                            [0,0,1,0,0],
-                            [0,1,1,1,0],
-                            [1,1,1,1,1],
-                            [0,1,1,1,0],
-                            [0,0,1,0,0]
+                            [0,0,0,1,1,0,0,0],
+                            [0,0,1,1,1,1,0,0],
+                            [0,1,1,1,1,1,1,0],
+                            [1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1],
+                            [0,1,1,1,1,1,1,0],
+                            [0,0,1,1,1,1,0,0],
+                            [0,0,0,1,1,0,0,0]
                         ],
                         colorMap: { 0: '#FFE4B5', 1: '#FFD700' }
                     },
@@ -1470,11 +1530,14 @@
                         price: 10, 
                         owned: false,
                         colors: [
-                            [0,1,0,1,0],
-                            [1,1,1,1,1],
-                            [1,1,1,1,1],
-                            [0,1,1,1,0],
-                            [0,0,1,0,0]
+                            [0,0,1,0,0,1,0,0],
+                            [0,1,1,1,1,1,1,0],
+                            [1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1],
+                            [1,1,1,1,1,1,1,1],
+                            [0,1,1,1,1,1,1,0],
+                            [0,0,1,1,1,1,0,0],
+                            [0,0,0,1,1,0,0,0]
                         ],
                         colorMap: { 0: '#FFE4E1', 1: '#FF69B4' }
                     },
@@ -1484,11 +1547,14 @@
                         price: 15, 
                         owned: false,
                         colors: [
-                            [0,1,1,1,0],
-                            [1,1,2,1,1],
-                            [1,2,2,2,1],
-                            [1,1,2,1,1],
-                            [0,1,1,1,0]
+                            [0,0,1,1,1,1,0,0],
+                            [0,1,1,2,2,1,1,0],
+                            [1,1,2,2,2,2,1,1],
+                            [1,2,2,2,2,2,2,1],
+                            [1,2,2,2,2,2,2,1],
+                            [1,1,2,2,2,2,1,1],
+                            [0,1,1,2,2,1,1,0],
+                            [0,0,1,1,1,1,0,0]
                         ],
                         colorMap: { 0: '#F0FFF0', 1: '#FF69B4', 2: '#FFD700' }
                     },
@@ -1498,11 +1564,14 @@
                         price: 20, 
                         owned: false,
                         colors: [
-                            [0,1,0,1,0],
-                            [1,2,2,2,1],
-                            [1,3,2,3,1],
-                            [1,2,2,2,1],
-                            [0,1,2,1,0]
+                            [0,0,1,0,0,1,0,0],
+                            [0,1,2,2,2,2,1,0],
+                            [1,2,2,3,3,2,2,1],
+                            [1,2,3,2,2,3,2,1],
+                            [1,2,2,2,2,2,2,1],
+                            [1,2,2,1,1,2,2,1],
+                            [0,1,1,2,2,1,1,0],
+                            [0,0,1,1,1,1,0,0]
                         ],
                         colorMap: { 0: '#FFF8DC', 1: '#FFA500', 2: '#FFE4B5', 3: '#333' }
                     },
@@ -1512,11 +1581,14 @@
                         price: 25, 
                         owned: false,
                         colors: [
-                            [0,1,1,1,0],
-                            [1,2,2,2,1],
-                            [1,2,2,2,1],
-                            [0,3,3,3,0],
-                            [0,3,3,3,0]
+                            [0,0,1,1,1,1,0,0],
+                            [0,1,2,2,2,2,1,0],
+                            [1,2,2,2,2,2,2,1],
+                            [1,2,2,2,2,2,2,1],
+                            [1,2,2,2,2,2,2,1],
+                            [0,3,3,3,3,3,3,0],
+                            [0,3,3,3,3,3,3,0],
+                            [0,0,3,3,3,3,0,0]
                         ],
                         colorMap: { 0: '#F0FFF0', 1: '#FF0000', 2: '#FF6347', 3: '#F5DEB3' }
                     },
@@ -1526,11 +1598,14 @@
                         price: 30, 
                         owned: false,
                         colors: [
-                            [0,1,1,1,0],
-                            [1,2,2,2,1],
-                            [1,3,3,3,1],
-                            [1,3,3,3,1],
-                            [0,1,1,1,0]
+                            [0,0,1,1,1,1,0,0],
+                            [0,1,2,2,2,2,1,0],
+                            [1,2,3,3,3,3,2,1],
+                            [1,3,3,3,3,3,3,1],
+                            [1,3,3,3,3,3,3,1],
+                            [1,3,3,3,3,3,3,1],
+                            [1,1,3,3,3,3,1,1],
+                            [0,0,1,1,1,1,0,0]
                         ],
                         colorMap: { 0: '#FFF', 1: '#FF69B4', 2: '#FFB6C1', 3: '#F4A460' }
                     }
@@ -1880,7 +1955,7 @@
         const initPerlerBoard = () => {
             const board = document.getElementById('perlerBoard');
             board.innerHTML = '';
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 64; i++) {
                 const bead = document.createElement('div');
                 bead.className = 'perler-bead';
                 bead.id = `bead-${i}`;
@@ -1914,17 +1989,17 @@
             const totalTime = focusTime * 60;
             const elapsedTime = totalTime - remainingTime;
             const progress = elapsedTime / totalTime;
-            const beadsToFill = Math.floor(progress * 25);
+            const beadsToFill = Math.floor(progress * 64);
             
             const patternId = storage.get('currentPattern') || 1;
             const patterns = storage.get('perlerPatterns');
             const pattern = patterns.find(p => p.id === patternId) || patterns[0];
             
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 64; i++) {
                 const bead = document.getElementById(`bead-${i}`);
                 if (bead && i < beadsToFill) {
-                    const row = Math.floor(i / 5);
-                    const col = i % 5;
+                    const row = Math.floor(i / 8);
+                    const col = i % 8;
                     const colorCode = pattern.colors[row][col];
                     bead.style.backgroundColor = pattern.colorMap[colorCode];
                     bead.classList.add('filled');
