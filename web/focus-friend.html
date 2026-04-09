@@ -82,26 +82,29 @@
             overflow: hidden;
         }
 
-        /* 拼豆房间场景 */
+        /* 2.5D拼豆房间场景 */
         .perler-room {
             width: 100%;
             height: 350px;
-            background: linear-gradient(180deg, #FFE4C4 0%, #FFDAB9 50%, #DEB887 100%);
+            background: linear-gradient(135deg, #FFE4C4 0%, #FFDAB9 50%, #DEB887 100%);
             border-radius: 20px;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            perspective: 1000px;
         }
 
-        /* 房间地板 */
+        /* 2.5D房间地板 */
         .room-floor {
             position: absolute;
             bottom: 0;
             width: 100%;
             height: 40%;
-            background: linear-gradient(180deg, #D2691E 0%, #8B4513 100%);
+            background: linear-gradient(135deg, #D2691E 0%, #8B4513 100%);
             border-radius: 0 0 20px 20px;
+            transform: rotateX(20deg) translateY(20px);
+            transform-origin: bottom;
         }
 
         /* 地板纹理 */
@@ -119,16 +122,18 @@
             );
         }
 
-        /* 窗户 */
+        /* 2.5D窗户 */
         .window {
             position: absolute;
             top: 30px;
             right: 30px;
             width: 80px;
             height: 100px;
-            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
             border: 4px solid #8B4513;
             border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: perspective(500px) rotateY(-20deg);
         }
 
         .window::before {
@@ -151,17 +156,17 @@
             transform: translateY(-50%);
         }
 
-        /* 拼豆工作台 */
+        /* 2.5D拼豆工作台 */
         .workbench {
             position: absolute;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) perspective(500px) rotateX(10deg);
             width: 180px;
             height: 100px;
-            background: linear-gradient(180deg, #A0522D 0%, #8B4513 100%);
+            background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
 
         .workbench::before {
@@ -172,7 +177,8 @@
             right: 10px;
             height: 15px;
             background: #DEB887;
-            border-radius: 3px;
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
         }
 
         /* 拼豆板 */
@@ -190,7 +196,7 @@
             grid-template-rows: repeat(5, 1fr);
             gap: 1px;
             padding: 2px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .perler-bead {
@@ -205,10 +211,10 @@
             box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Q版小土豆角色 */
+        /* 小土豆角色（恢复之前版本） */
         .potato-character {
             position: absolute;
-            width: 80px;
+            width: 100px;
             height: 100px;
             bottom: 60px;
             left: 30%;
@@ -218,48 +224,37 @@
 
         /* 土豆身体 */
         .potato-body {
-            position: absolute;
-            width: 70px;
-            height: 85px;
-            background: linear-gradient(145deg, #D2691E 0%, #8B4513 100%);
-            border-radius: 45% 45% 50% 50%;
-            bottom: 0;
-            left: 5px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         /* 土豆眼睛 */
         .potato-eye {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 15px;
+            height: 15px;
             background: white;
             border-radius: 50%;
             top: 25px;
+            box-shadow: inset 0 0 0 3px #333;
         }
 
-        .potato-eye.left { left: 18px; }
-        .potato-eye.right { right: 18px; }
-
-        .potato-eye::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #333;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-        }
+        .potato-eye.left { left: 15px; }
+        .potato-eye.right { right: 15px; }
 
         /* 土豆腮红 */
         .potato-blush {
             position: absolute;
-            width: 10px;
-            height: 6px;
-            background: rgba(255, 182, 193, 0.6);
+            width: 12px;
+            height: 8px;
+            background: rgba(255, 105, 180, 0.6);
             border-radius: 50%;
-            top: 38px;
+            top: 45px;
         }
 
         .potato-blush.left { left: 12px; }
@@ -268,11 +263,11 @@
         /* 土豆嘴巴 */
         .potato-mouth {
             position: absolute;
-            width: 15px;
-            height: 8px;
-            border-bottom: 3px solid #333;
+            width: 20px;
+            height: 10px;
+            border-bottom: 4px solid #333;
             border-radius: 0 0 50% 50%;
-            top: 38px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -280,41 +275,41 @@
         /* 土豆手臂 */
         .potato-arm {
             position: absolute;
-            width: 20px;
-            height: 8px;
-            background: #D2691E;
-            border-radius: 10px;
-            top: 50px;
+            width: 25px;
+            height: 10px;
+            background: #FFD700;
+            border-radius: 15px;
+            top: 40px;
             transition: all 0.3s ease;
         }
 
-        .potato-arm.left { 
-            left: -8px; 
+        .potato-arm.left {
+            left: -15px;
             transform: rotate(-30deg);
         }
 
-        .potato-arm.right { 
-            right: -8px; 
+        .potato-arm.right {
+            right: -15px;
             transform: rotate(30deg);
         }
 
         /* 土豆腿部 */
         .potato-leg {
             position: absolute;
-            width: 15px;
-            height: 20px;
-            background: #D2691E;
+            width: 20px;
+            height: 25px;
+            background: #FFD700;
             border-radius: 0 0 50% 50%;
-            bottom: -10px;
+            bottom: -15px;
         }
 
-        .potato-leg.left { left: 15px; }
-        .potato-leg.right { right: 15px; }
+        .potato-leg.left { left: 20px; }
+        .potato-leg.right { right: 20px; }
 
         /* 闲置动画 - 小土豆在房间里闲逛 */
         @keyframes potato-idle {
             0%, 100% { 
-                left: 30%; 
+                left: 20%; 
                 transform: scaleX(1);
             }
             25% { 
@@ -322,7 +317,7 @@
                 transform: scaleX(1);
             }
             50% { 
-                left: 70%; 
+                left: 80%; 
                 transform: scaleX(1);
             }
             75% { 
@@ -333,7 +328,7 @@
 
         @keyframes potato-bounce {
             0%, 100% { transform: translateY(0) scaleX(var(--scale-x, 1)); }
-            50% { transform: translateY(-5px) scaleX(var(--scale-x, 1)); }
+            50% { transform: translateY(-8px) scaleX(var(--scale-x, 1)); }
         }
 
         .potato-character.idle {
@@ -353,17 +348,17 @@
         }
 
         .potato-character.focusing .potato-arm.left {
-            transform: rotate(-60deg) translateY(-10px);
+            transform: rotate(-60deg) translateY(-15px);
         }
 
         .potato-character.focusing .potato-arm.right {
-            transform: rotate(60deg) translateY(-10px);
+            transform: rotate(60deg) translateY(-15px);
         }
 
         /* 拼豆动画 */
         @keyframes beading {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
+            50% { transform: translateY(-5px); }
         }
 
         .potato-character.focusing .potato-arm {
@@ -1171,6 +1166,7 @@
                     <div class="sub-tab-item active" data-category="furniture">家具</div>
                     <div class="sub-tab-item" data-category="wallpaper">壁纸</div>
                     <div class="sub-tab-item" data-category="plant">植物</div>
+                    <div class="sub-tab-item" data-category="pattern">拼豆图案</div>
                 </div>
                 <div class="goods-list" id="goodsList">
                     <!-- 商品将通过JS动态生成 -->
@@ -1593,32 +1589,113 @@
 
         // 加载商品数据
         const loadGoodsData = (category) => {
-            const items = storage.get('items').filter(item => item.type === category);
-            const userItems = storage.get('userItems');
             const goodsList = document.getElementById('goodsList');
             goodsList.innerHTML = '';
             
-            items.forEach(item => {
-                const isOwned = userItems.some(ui => ui.id === item.id);
-                const goodsItem = document.createElement('div');
-                goodsItem.className = 'goods-item';
-                goodsItem.innerHTML = `
-                    <img class="goods-image" src="${item.imageUrl}" alt="${item.name}">
-                    <div class="goods-name">${item.name}</div>
-                    <div class="goods-price">
-                        <span>🧦</span> ${item.price}
-                    </div>
-                    ${isOwned ? '<div style="color: #4CAF50; font-size: 12px; margin-top: 5px;">已拥有</div>' : ''}
-                `;
-                goodsItem.addEventListener('click', () => {
-                    if (isOwned) {
-                        showModal('提示', '您已经拥有此物品');
-                    } else {
-                        showBuyModal(item);
+            // 如果是拼豆图案类别
+            if (category === 'pattern') {
+                const patterns = storage.get('perlerPatterns');
+                const currentPatternId = storage.get('currentPattern') || 1;
+                
+                patterns.forEach(pattern => {
+                    const isOwned = pattern.owned;
+                    const isSelected = pattern.id === currentPatternId;
+                    
+                    // 生成图案预览
+                    let previewHTML = '<div class="pattern-preview" style="margin: 0 auto 10px;">';
+                    for (let row = 0; row < 5; row++) {
+                        for (let col = 0; col < 5; col++) {
+                            const colorCode = pattern.colors[row][col];
+                            const color = pattern.colorMap[colorCode];
+                            previewHTML += `<div class="pattern-preview-bead" style="background-color: ${color}"></div>`;
+                        }
                     }
+                    previewHTML += '</div>';
+                    
+                    const goodsItem = document.createElement('div');
+                    goodsItem.className = `goods-item ${isSelected ? 'selected' : ''} ${!isOwned ? 'locked' : ''}`;
+                    goodsItem.style.cssText = isSelected ? 'border: 3px solid #4CAF50; background: #E8F5E9;' : '';
+                    goodsItem.innerHTML = `
+                        ${previewHTML}
+                        <div class="goods-name">${pattern.name}</div>
+                        <div class="goods-price">
+                            ${isOwned ? '<span style="color: #4CAF50;">已拥有</span>' : `<span>🧦</span> ${pattern.price}`}
+                        </div>
+                        ${isSelected ? '<div style="color: #4CAF50; font-size: 12px; margin-top: 5px;">当前使用</div>' : ''}
+                    `;
+                    goodsItem.addEventListener('click', () => {
+                        if (isOwned) {
+                            storage.set('currentPattern', pattern.id);
+                            renderCurrentPattern();
+                            loadGoodsData('pattern');
+                            showModal('✅ 已选择', `当前图案：${pattern.name}`);
+                        } else {
+                            buyPatternFromShop(pattern.id);
+                        }
+                    });
+                    goodsList.appendChild(goodsItem);
                 });
-                goodsList.appendChild(goodsItem);
-            });
+            } else {
+                // 原有家具、壁纸、植物类别
+                const items = storage.get('items').filter(item => item.type === category);
+                const userItems = storage.get('userItems');
+                
+                items.forEach(item => {
+                    const isOwned = userItems.some(ui => ui.id === item.id);
+                    const goodsItem = document.createElement('div');
+                    goodsItem.className = 'goods-item';
+                    goodsItem.innerHTML = `
+                        <img class="goods-image" src="${item.imageUrl}" alt="${item.name}">
+                        <div class="goods-name">${item.name}</div>
+                        <div class="goods-price">
+                            <span>🧦</span> ${item.price}
+                        </div>
+                        ${isOwned ? '<div style="color: #4CAF50; font-size: 12px; margin-top: 5px;">已拥有</div>' : ''}
+                    `;
+                    goodsItem.addEventListener('click', () => {
+                        if (isOwned) {
+                            showModal('提示', '您已经拥有此物品');
+                        } else {
+                            showBuyModal(item);
+                        }
+                    });
+                    goodsList.appendChild(goodsItem);
+                });
+            }
+        };
+
+        // 从商店购买拼豆图案
+        const buyPatternFromShop = (patternId) => {
+            const patterns = storage.get('perlerPatterns');
+            const pattern = patterns.find(p => p.id === patternId);
+            const user = storage.get('user');
+            
+            if (!pattern || pattern.owned) return;
+            
+            if (user.socks >= pattern.price) {
+                showModal(
+                    '购买图案',
+                    `确定花费 ${pattern.price} 袜子购买 ${pattern.name} 吗？`,
+                    '取消',
+                    '购买',
+                    null,
+                    () => {
+                        user.socks -= pattern.price;
+                        pattern.owned = true;
+                        
+                        storage.set('user', user);
+                        storage.set('perlerPatterns', patterns);
+                        storage.set('currentPattern', patternId);
+                        
+                        loadData();
+                        renderCurrentPattern();
+                        loadGoodsData('pattern');
+                        showModal('🎉 购买成功', `获得图案：${pattern.name}！`);
+                    }
+                );
+            } else {
+                showModal('😢 袜子不足', `需要 ${pattern.price} 袜子，你只有 ${user.socks} 袜子`);
+            }
         };
 
         // 加载我的物品数据
@@ -2136,45 +2213,62 @@
             const currentPatternId = storage.get('currentPattern') || 1;
             const user = storage.get('user');
             
-            let patternHTML = '<div class="pattern-grid">';
-            patterns.forEach(pattern => {
-                const isSelected = pattern.id === currentPatternId;
-                const isOwned = pattern.owned;
-                
-                // 生成图案预览
-                let previewHTML = '<div class="pattern-preview">';
-                for (let row = 0; row < 5; row++) {
-                    for (let col = 0; col < 5; col++) {
-                        const colorCode = pattern.colors[row][col];
-                        const color = pattern.colorMap[colorCode];
-                        previewHTML += `<div class="pattern-preview-bead" style="background-color: ${color}"></div>`;
-                    }
-                }
-                previewHTML += '</div>';
-                
-                patternHTML += `
-                    <div class="pattern-item ${isSelected ? 'selected' : ''} ${!isOwned ? 'locked' : ''}" 
-                         data-pattern-id="${pattern.id}" 
-                         onclick="selectPattern(${pattern.id})">
-                        ${previewHTML}
-                        <div class="pattern-name">${pattern.name}</div>
-                        ${!isOwned ? `<div class="pattern-price">🧦 ${pattern.price}</div>` : '<div class="pattern-status">已拥有</div>'}
-                    </div>
-                `;
-            });
-            patternHTML += '</div>';
-            
-            showModal(
-                '选择拼豆图案',
-                patternHTML,
-                '关闭',
-                ''
-            );
-            
-            // 使弹窗内容可滚动
             const modalContent = document.querySelector('.modal-content');
             if (modalContent) {
                 modalContent.classList.add('pattern-modal-content');
+                
+                // 清空并重新构建内容
+                const modalTitle = document.getElementById('modalTitle');
+                const modalMessage = document.getElementById('modalMessage');
+                const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+                const modalCancelBtn = document.getElementById('modalCancelBtn');
+                
+                modalTitle.textContent = '选择拼豆图案';
+                modalConfirmBtn.textContent = '关闭';
+                modalCancelBtn.textContent = '';
+                modalCancelBtn.style.display = 'none';
+                
+                // 构建图案网格
+                let patternHTML = '<div class="pattern-grid">';
+                patterns.forEach(pattern => {
+                    const isSelected = pattern.id === currentPatternId;
+                    const isOwned = pattern.owned;
+                    
+                    // 生成图案预览
+                    let previewHTML = '<div class="pattern-preview">';
+                    for (let row = 0; row < 5; row++) {
+                        for (let col = 0; col < 5; col++) {
+                            const colorCode = pattern.colors[row][col];
+                            const color = pattern.colorMap[colorCode];
+                            previewHTML += `<div class="pattern-preview-bead" style="background-color: ${color}"></div>`;
+                        }
+                    }
+                    previewHTML += '</div>';
+                    
+                    patternHTML += `
+                        <div class="pattern-item ${isSelected ? 'selected' : ''} ${!isOwned ? 'locked' : ''}" 
+                             data-pattern-id="${pattern.id}">
+                            ${previewHTML}
+                            <div class="pattern-name">${pattern.name}</div>
+                            ${!isOwned ? `<div class="pattern-price">🧦 ${pattern.price}</div>` : '<div class="pattern-status">已拥有</div>'}
+                        </div>
+                    `;
+                });
+                patternHTML += '</div>';
+                
+                modalMessage.innerHTML = patternHTML;
+                
+                // 添加事件监听器
+                const patternItems = modalMessage.querySelectorAll('.pattern-item');
+                patternItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const patternId = parseInt(item.dataset.patternId);
+                        selectPattern(patternId);
+                    });
+                });
+                
+                // 显示弹窗
+                document.getElementById('modal').classList.remove('hidden');
             }
         };
 
