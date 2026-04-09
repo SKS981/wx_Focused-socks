@@ -369,6 +369,202 @@
             font-size: 24px;
         }
 
+        /* 目标设置 */
+        .goals-section {
+            width: 100%;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-radius: 15px;
+            border: 2px solid #FFD54F;
+        }
+
+        .goal-input-group {
+            margin-bottom: 15px;
+        }
+
+        .goal-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #F57C00;
+        }
+
+        .goal-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #FFD54F;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .goal-input:focus {
+            border-color: #FF9800;
+        }
+
+        .goal-progress {
+            margin-top: 10px;
+        }
+
+        .goal-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .goal-bar {
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .goal-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF9800 0%, #FFC107 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* 统计图表 */
+        .stats-section {
+            width: 100%;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-radius: 15px;
+            border: 2px solid #81C784;
+        }
+
+        .stats-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stats-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .stats-tab.active {
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats-chart {
+            height: 150px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 5px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #4CAF50 0%, #81C784 100%);
+            border-radius: 5px 5px 0 0;
+            min-height: 20px;
+            transition: height 0.5s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .summary-label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        /* 专注历史 */
+        .history-section {
+            width: 100%;
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-radius: 15px;
+            border: 2px solid #BA68C8;
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .history-date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .history-duration {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .history-reward {
+            font-size: 14px;
+            color: #FF6B35;
+        }
+
         /* 弹窗 */
         .modal {
             position: fixed;
@@ -567,9 +763,78 @@
                 </div>
             </div>
 
+            <!-- 目标设置 -->
+            <div class="goals-section">
+                <h3 style="margin-bottom: 15px;">🎯 我的目标 </h3>
+                <div class="goal-input-group">
+                    <label>今日专注目标（分钟）</label>
+                    <input type="number" id="dailyGoalInput" class="goal-input" placeholder="例如：60" min="1">
+                    <button class="btn btn-secondary" id="saveDailyGoalBtn" style="margin-top: 10px;">保存目标</button>
+                </div>
+                <div class="goal-progress" id="dailyGoalProgress">
+                    <div class="goal-label">
+                        <span>今日进度</span>
+                        <span id="dailyGoalText">0/60 分钟</span>
+                    </div>
+                    <div class="goal-bar">
+                        <div class="goal-fill" id="dailyGoalFill"></div>
+                    </div>
+                </div>
+                
+                <div class="goal-input-group" style="margin-top: 20px;">
+                    <label>本周专注目标（分钟）</label>
+                    <input type="number" id="weeklyGoalInput" class="goal-input" placeholder="例如：300" min="1">
+                    <button class="btn btn-secondary" id="saveWeeklyGoalBtn" style="margin-top: 10px;">保存目标</button>
+                </div>
+                <div class="goal-progress" id="weeklyGoalProgress">
+                    <div class="goal-label">
+                        <span>本周进度</span>
+                        <span id="weeklyGoalText">0/300 分钟</span>
+                    </div>
+                    <div class="goal-bar">
+                        <div class="goal-fill" id="weeklyGoalFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计图表 -->
+            <div class="stats-section">
+                <h3 style="margin-bottom: 15px;">📊 专注统计</h3>
+                <div class="stats-tabs">
+                    <div class="stats-tab active" data-stats="week">本周</div>
+                    <div class="stats-tab" data-stats="month">本月</div>
+                    <div class="stats-tab" data-stats="year">本年</div>
+                </div>
+                <div class="stats-chart" id="statsChart">
+                    <!-- 图表将通过JS动态生成 -->
+                </div>
+                <div class="stats-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">平均时长</span>
+                        <span class="summary-value" id="avgFocusTime">0分钟</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">最长专注</span>
+                        <span class="summary-value" id="maxFocusTime">0分钟</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">连续天数</span>
+                        <span class="summary-value" id="streakDays">0天</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 专注历史 -->
+            <div class="history-section">
+                <h3 style="margin-bottom: 15px;">📝 专注历史</h3>
+                <div class="history-list" id="historyList">
+                    <!-- 历史记录将通过JS动态生成 -->
+                </div>
+            </div>
+
             <!-- 成就徽章 -->
             <div class="achievements">
-                <h3 style="margin-bottom: 10px;">成就徽章</h3>
+                <h3 style="margin-bottom: 10px;">🏆 成就徽章</h3>
                 <div class="achievement-list" id="achievementList">
                     <!-- 成就徽章将通过JS动态生成 -->
                 </div>
@@ -687,6 +952,9 @@
                         loadShopData();
                     } else if (tabName === 'profile') {
                         loadData();
+                        updateGoalProgress();
+                        renderStatsChart('week');
+                        renderHistory();
                     }
                 });
             });
@@ -934,44 +1202,73 @@
             
             document.getElementById('startBtn').classList.remove('hidden');
             document.getElementById('focusingButtons').classList.add('hidden');
-            document.getElementById('characterStatus').textContent = '完成！';
-            document.querySelector('.character').src = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20happy%20and%20excited%2C%20warm%20colors%2C%20simple%20style&image_size=square';
+            document.getElementById('characterStatus').textContent = '太棒了！🎉';
+            document.querySelector('.character').src = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bean%20character%20very%20happy%20and%20excited%2C%20jumping%20with%20joy%2C%20warm%20colors%2C%20simple%20style&image_size=square';
             
-            // 计算奖励
-            const reward = Math.floor(focusTime / 5);
+            // 计算基础奖励
+            const baseReward = Math.floor(focusTime / 5);
             const user = storage.get('user');
-            user.socks += reward;
+            
+            // 更新用户数据
+            user.socks += baseReward;
             user.totalFocusMinutes += focusTime;
             user.focusCount++;
             
-            // 升级逻辑
-            const newLevel = Math.floor(user.totalFocusMinutes / 60) + 1;
-            if (newLevel > user.level) {
-                user.level = newLevel;
-                showModal('升级', `恭喜升级到${newLevel}级！`);
+            // 检查升级
+            const expNeeded = getExpForLevel(user.level);
+            const currentExp = getCurrentExp(user);
+            let leveledUp = false;
+            
+            if (currentExp >= expNeeded) {
+                user.level++;
+                leveledUp = true;
             }
             
             storage.set('user', user);
-            loadData();
+            
+            // 更新任务进度
+            updateTaskProgress('focus', 1);
+            updateTaskProgress('minutes', focusTime);
+            updateTaskProgress('streak', 1);
             
             // 保存专注记录
             const sessions = storage.get('focusSessions');
             sessions.push({
                 startTime: new Date().toISOString(),
                 duration: focusTime,
-                reward: reward,
+                reward: baseReward,
                 completed: true
             });
             storage.set('focusSessions', sessions);
             
+            // 更新显示
+            updateExpBar();
+            renderDailyTasks();
+            loadData();
+            
+            // 检查任务完成
+            setTimeout(() => {
+                checkTaskCompletion();
+            }, 500);
+            
             // 显示完成弹窗
-            showModal('专注完成', `恭喜完成${focusTime}分钟的专注！获得${reward}个袜子。`, '确定', '看广告双倍奖励', null, () => {
-                // 双倍奖励
-                user.socks += reward;
-                storage.set('user', user);
-                loadData();
-                showModal('成功', `获得双倍奖励！总共获得${reward * 2}个袜子。`);
-            });
+            if (leveledUp) {
+                showModal('🎊 升级了！', `恭喜完成 ${focusTime} 分钟专注！\n获得 ${baseReward} 袜子！\n\n升到 Lv.${user.level}！`, '太棒了', '看广告双倍', null, () => {
+                    const doubleReward = baseReward;
+                    user.socks += doubleReward;
+                    storage.set('user', user);
+                    loadData();
+                    showModal('🎉 双倍奖励！', `获得 ${doubleReward} 额外袜子！`);
+                });
+            } else {
+                showModal('🎉 专注完成！', `恭喜完成 ${focusTime} 分钟专注！\n获得 ${baseReward} 袜子！\n获得 ${focusTime} 经验！`, '确定', '看广告双倍', null, () => {
+                    const doubleReward = baseReward;
+                    user.socks += doubleReward;
+                    storage.set('user', user);
+                    loadData();
+                    showModal('🎉 双倍奖励！', `获得 ${doubleReward} 额外袜子！`);
+                });
+            }
         };
 
         // 时间设置
@@ -1077,6 +1374,429 @@
             );
         };
 
+        // 计算升级所需经验值
+        const getExpForLevel = (level) => {
+            return 100 + (level - 1) * 50;
+        };
+
+        // 计算当前经验值
+        const getCurrentExp = (user) => {
+            const expForCurrentLevel = getExpForLevel(user.level);
+            const expFromPreviousLevels = user.level > 1 ? 
+                Array.from({length: user.level - 1}, (_, i) => getExpForLevel(i + 1)).reduce((a, b) => a + b, 0) : 0;
+            return user.totalFocusMinutes - expFromPreviousLevels;
+        };
+
+        // 更新经验条显示
+        const updateExpBar = () => {
+            const user = storage.get('user');
+            const currentExp = getCurrentExp(user);
+            const expNeeded = getExpForLevel(user.level);
+            const percentage = Math.min((currentExp / expNeeded) * 100, 100);
+
+            const expFill = document.getElementById('expFill');
+            const expText = document.getElementById('expText');
+            const characterLevel = document.getElementById('characterLevel');
+            
+            if (expFill) expFill.style.width = percentage + '%';
+            if (expText) expText.textContent = `${currentExp}/${expNeeded}`;
+            if (characterLevel) characterLevel.textContent = user.level;
+        };
+
+        // 初始化每日任务
+        const initDailyTasks = () => {
+            const today = new Date().toDateString();
+            let tasks = storage.get('dailyTasks');
+            
+            if (!tasks || tasks.date !== today) {
+                tasks = {
+                    date: today,
+                    tasks: [
+                        { id: 1, name: '完成1次专注', target: 1, progress: 0, reward: 5, type: 'focus', rewarded: false },
+                        { id: 2, name: '累计专注10分钟', target: 10, progress: 0, reward: 8, type: 'minutes', rewarded: false },
+                        { id: 3, name: '连续专注3次', target: 3, progress: 0, reward: 10, type: 'streak', rewarded: false }
+                    ]
+                };
+                storage.set('dailyTasks', tasks);
+            }
+        };
+
+        // 渲染每日任务
+        const renderDailyTasks = () => {
+            const tasks = storage.get('dailyTasks');
+            const taskList = document.getElementById('taskList');
+            if (!tasks || !taskList) return;
+
+            taskList.innerHTML = tasks.tasks.map(task => `
+                <div class="task-item">
+                    <div class="task-checkbox ${task.progress >= task.target ? 'completed' : ''}">
+                        ${task.progress >= task.target ? '✓' : ''}
+                    </div>
+                    <div class="task-info">
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-reward">🧦 ${task.reward} + 经验</div>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        // 更新任务进度
+        const updateTaskProgress = (type, value) => {
+            const tasks = storage.get('dailyTasks');
+            if (!tasks) return;
+
+            tasks.tasks.forEach(task => {
+                if (task.type === type && task.progress < task.target) {
+                    task.progress += value;
+                    if (task.progress > task.target) {
+                        task.progress = task.target;
+                    }
+                }
+            });
+
+            storage.set('dailyTasks', tasks);
+            renderDailyTasks();
+        };
+
+        // 检查任务完成并发放奖励
+        const checkTaskCompletion = () => {
+            const tasks = storage.get('dailyTasks');
+            const user = storage.get('user');
+            let bonusSocks = 0;
+            let bonusExp = 0;
+
+            tasks.tasks.forEach(task => {
+                if (task.progress >= task.target && !task.rewarded) {
+                    bonusSocks += task.reward;
+                    bonusExp += 10;
+                    task.rewarded = true;
+                }
+            });
+
+            if (bonusSocks > 0) {
+                user.socks += bonusSocks;
+                user.totalFocusMinutes += bonusExp;
+                storage.set('user', user);
+                storage.set('dailyTasks', tasks);
+                showModal('🎉 任务奖励', `恭喜完成任务！获得 ${bonusSocks} 袜子和 ${bonusExp} 经验！`);
+                loadData();
+            }
+        };
+
+        // 角色互动功能
+        const interactWithCharacter = () => {
+            const interactions = [
+                { message: '好开心~谢谢你摸我的头！', exp: 2 },
+                { message: '豆子好喜欢你！💕', exp: 2 },
+                { message: '继续专注吧，我相信你！', exp: 1 },
+                { message: '今天也要加油哦！🌟', exp: 1 },
+                { message: '摸摸头，专注更有效率~', exp: 2 }
+            ];
+
+            const interaction = interactions[Math.floor(Math.random() * interactions.length)];
+            
+            // 添加互动动画
+            const characterArea = document.querySelector('.character-area');
+            if (characterArea) {
+                characterArea.style.transform = 'scale(1.1)';
+                characterArea.style.transition = 'transform 0.3s ease';
+                
+                setTimeout(() => {
+                    characterArea.style.transform = 'scale(1)';
+                }, 300);
+            }
+
+            // 显示互动消息
+            const statusEl = document.getElementById('characterStatus');
+            if (statusEl) statusEl.textContent = interaction.message;
+
+            // 给予经验奖励
+            const user = storage.get('user');
+            user.totalFocusMinutes += interaction.exp;
+            
+            // 检查升级
+            const expNeeded = getExpForLevel(user.level);
+            const currentExp = getCurrentExp(user);
+            
+            if (currentExp >= expNeeded) {
+                user.level++;
+                storage.set('user', user);
+                showModal('🎊 升级了！', `恭喜升到 Lv.${user.level}！豆子变得更厉害了！`);
+            } else {
+                storage.set('user', user);
+            }
+
+            updateExpBar();
+            loadData();
+        };
+
+        // ==================== 统计和目标功能 ====================
+
+        // 初始化目标数据
+        const initGoals = () => {
+            if (!storage.get('goals')) {
+                storage.set('goals', {
+                    daily: 60,    // 默认每日目标60分钟
+                    weekly: 300   // 默认每周目标300分钟
+                });
+            }
+        };
+
+        // 保存目标
+        const saveGoal = (type, value) => {
+            const goals = storage.get('goals') || { daily: 60, weekly: 300 };
+            goals[type] = parseInt(value) || (type === 'daily' ? 60 : 300);
+            storage.set('goals', goals);
+            updateGoalProgress();
+            showModal('✅ 目标已保存', `${type === 'daily' ? '每日' : '每周'}目标已设置为 ${goals[type]} 分钟`);
+        };
+
+        // 更新目标进度
+        const updateGoalProgress = () => {
+            const goals = storage.get('goals') || { daily: 60, weekly: 300 };
+            const sessions = storage.get('focusSessions') || [];
+            const today = new Date().toDateString();
+            const now = new Date();
+
+            // 计算今日专注时长
+            const todayMinutes = sessions
+                .filter(s => new Date(s.startTime).toDateString() === today && s.completed)
+                .reduce((sum, s) => sum + s.duration, 0);
+
+            // 计算本周专注时长
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+            const weeklyMinutes = sessions
+                .filter(s => new Date(s.startTime) >= weekStart && s.completed)
+                .reduce((sum, s) => sum + s.duration, 0);
+
+            // 更新每日目标显示
+            const dailyPercentage = Math.min((todayMinutes / goals.daily) * 100, 100);
+            const dailyFill = document.getElementById('dailyGoalFill');
+            const dailyText = document.getElementById('dailyGoalText');
+            const dailyInput = document.getElementById('dailyGoalInput');
+            
+            if (dailyFill) dailyFill.style.width = dailyPercentage + '%';
+            if (dailyText) dailyText.textContent = `${todayMinutes}/${goals.daily} 分钟`;
+            if (dailyInput) dailyInput.value = goals.daily;
+
+            // 更新每周目标显示
+            const weeklyPercentage = Math.min((weeklyMinutes / goals.weekly) * 100, 100);
+            const weeklyFill = document.getElementById('weeklyGoalFill');
+            const weeklyText = document.getElementById('weeklyGoalText');
+            const weeklyInput = document.getElementById('weeklyGoalInput');
+            
+            if (weeklyFill) weeklyFill.style.width = weeklyPercentage + '%';
+            if (weeklyText) weeklyText.textContent = `${weeklyMinutes}/${goals.weekly} 分钟`;
+            if (weeklyInput) weeklyInput.value = goals.weekly;
+        };
+
+        // 渲染统计图表
+        const renderStatsChart = (period) => {
+            const sessions = storage.get('focusSessions') || [];
+            const now = new Date();
+            let data = [];
+            let labels = [];
+
+            if (period === 'week') {
+                // 本周数据
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date(now);
+                    date.setDate(date.getDate() - i);
+                    const dateStr = date.toDateString();
+                    const dayName = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
+                    
+                    const minutes = sessions
+                        .filter(s => new Date(s.startTime).toDateString() === dateStr && s.completed)
+                        .reduce((sum, s) => sum + s.duration, 0);
+                    
+                    data.push(minutes);
+                    labels.push(dayName);
+                }
+            } else if (period === 'month') {
+                // 本月数据（按周汇总）
+                for (let i = 3; i >= 0; i--) {
+                    const weekStart = new Date(now);
+                    weekStart.setDate(weekStart.getDate() - (i * 7 + weekStart.getDay()));
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekEnd.getDate() + 6);
+                    
+                    const minutes = sessions
+                        .filter(s => {
+                            const sDate = new Date(s.startTime);
+                            return sDate >= weekStart && sDate <= weekEnd && s.completed;
+                        })
+                        .reduce((sum, s) => sum + s.duration, 0);
+                    
+                    data.push(minutes);
+                    labels.push(`第${4-i}周`);
+                }
+            } else if (period === 'year') {
+                // 本年数据（按月汇总）
+                for (let i = 11; i >= 0; i--) {
+                    const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const monthStr = month.getMonth() + 1 + '月';
+                    
+                    const minutes = sessions
+                        .filter(s => {
+                            const sDate = new Date(s.startTime);
+                            return sDate.getFullYear() === month.getFullYear() && 
+                                   sDate.getMonth() === month.getMonth() && s.completed;
+                        })
+                        .reduce((sum, s) => sum + s.duration, 0);
+                    
+                    data.push(minutes);
+                    labels.push(monthStr);
+                }
+            }
+
+            // 找出最大值用于计算比例
+            const maxValue = Math.max(...data, 1);
+
+            // 渲染图表
+            const chartContainer = document.getElementById('statsChart');
+            if (chartContainer) {
+                chartContainer.innerHTML = data.map((value, index) => {
+                    const height = (value / maxValue) * 100;
+                    return `<div class="chart-bar" style="height: ${Math.max(height, 10)}%" data-value="${value}分" title="${labels[index]}: ${value}分钟"></div>`;
+                }).join('');
+            }
+
+            // 更新统计摘要
+            updateStatsSummary(data);
+        };
+
+        // 更新统计摘要
+        const updateStatsSummary = (data) => {
+            const sessions = storage.get('focusSessions') || [];
+            const completedSessions = sessions.filter(s => s.completed);
+
+            // 平均时长
+            const avgTime = completedSessions.length > 0 
+                ? Math.round(completedSessions.reduce((sum, s) => sum + s.duration, 0) / completedSessions.length)
+                : 0;
+
+            // 最长专注
+            const maxTime = completedSessions.length > 0
+                ? Math.max(...completedSessions.map(s => s.duration))
+                : 0;
+
+            // 连续天数
+            const streakDays = calculateStreakDays();
+
+            // 更新显示
+            const avgEl = document.getElementById('avgFocusTime');
+            const maxEl = document.getElementById('maxFocusTime');
+            const streakEl = document.getElementById('streakDays');
+
+            if (avgEl) avgEl.textContent = avgTime + '分钟';
+            if (maxEl) maxEl.textContent = maxTime + '分钟';
+            if (streakEl) streakEl.textContent = streakDays + '天';
+        };
+
+        // 计算连续专注天数
+        const calculateStreakDays = () => {
+            const sessions = storage.get('focusSessions') || [];
+            const completedDates = [...new Set(
+                sessions
+                    .filter(s => s.completed)
+                    .map(s => new Date(s.startTime).toDateString())
+            )].sort((a, b) => new Date(b) - new Date(a));
+
+            if (completedDates.length === 0) return 0;
+
+            let streak = 0;
+            const today = new Date().toDateString();
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            // 检查今天或昨天是否有记录
+            if (completedDates[0] === today || completedDates[0] === yesterday.toDateString()) {
+                streak = 1;
+                
+                for (let i = 1; i < completedDates.length; i++) {
+                    const prevDate = new Date(completedDates[i - 1]);
+                    const currDate = new Date(completedDates[i]);
+                    const diffDays = (prevDate - currDate) / (1000 * 60 * 60 * 24);
+                    
+                    if (diffDays === 1) {
+                        streak++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            return streak;
+        };
+
+        // 渲染专注历史
+        const renderHistory = () => {
+            const sessions = storage.get('focusSessions') || [];
+            const historyList = document.getElementById('historyList');
+            
+            if (!historyList) return;
+
+            // 按时间倒序排列，只显示最近10条
+            const recentSessions = sessions
+                .filter(s => s.completed)
+                .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
+                .slice(0, 10);
+
+            if (recentSessions.length === 0) {
+                historyList.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">暂无专注记录</div>';
+                return;
+            }
+
+            historyList.innerHTML = recentSessions.map(session => {
+                const date = new Date(session.startTime);
+                const dateStr = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                
+                return `
+                    <div class="history-item">
+                        <div>
+                            <div class="history-date">${dateStr}</div>
+                            <div class="history-duration">${session.duration}分钟</div>
+                        </div>
+                        <div class="history-reward">🧦 ${session.reward}</div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // 设置统计标签切换
+        const setupStatsTabs = () => {
+            const statsTabs = document.querySelectorAll('.stats-tab');
+            statsTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    statsTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderStatsChart(tab.dataset.stats);
+                });
+            });
+        };
+
+        // 设置目标按钮事件
+        const setupGoalButtons = () => {
+            const saveDailyBtn = document.getElementById('saveDailyGoalBtn');
+            const saveWeeklyBtn = document.getElementById('saveWeeklyGoalBtn');
+            const dailyInput = document.getElementById('dailyGoalInput');
+            const weeklyInput = document.getElementById('weeklyGoalInput');
+
+            if (saveDailyBtn) {
+                saveDailyBtn.addEventListener('click', () => {
+                    saveGoal('daily', dailyInput.value);
+                });
+            }
+
+            if (saveWeeklyBtn) {
+                saveWeeklyBtn.addEventListener('click', () => {
+                    saveGoal('weekly', weeklyInput.value);
+                });
+            }
+        };
+
         // 初始化
         const init = () => {
             initData();
@@ -1096,6 +1816,25 @@
             
             // 初始化房间
             loadRoomData();
+            
+            // 初始化游戏化功能
+            initDailyTasks();
+            renderDailyTasks();
+            updateExpBar();
+            
+            // 初始化统计和目标功能
+            initGoals();
+            updateGoalProgress();
+            renderStatsChart('week');
+            renderHistory();
+            setupStatsTabs();
+            setupGoalButtons();
+            
+            // 添加角色点击事件
+            const character = document.querySelector('.character');
+            if (character) {
+                character.addEventListener('click', interactWithCharacter);
+            }
         };
 
         // 页面加载完成后初始化
