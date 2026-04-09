@@ -82,18 +82,23 @@
             overflow: hidden;
         }
 
-        /* 3D房间场景 */
+        /* 真正的3D房间场景 */
         .perler-room {
             width: 100%;
-            height: 500px;
+            height: 600px;
             background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 50%, #80DEEA 100%);
             border-radius: 20px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             margin-bottom: 20px;
-            perspective: 1200px;
+            perspective: 1500px;
             transform-style: preserve-3d;
+            cursor: grab;
+        }
+
+        .perler-room:active {
+            cursor: grabbing;
         }
 
         /* 3D房间容器 */
@@ -102,84 +107,122 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            transform: rotateX(20deg) rotateY(0deg);
-            transition: transform 0.5s ease;
+            transform: rotateX(25deg) rotateY(0deg) translateZ(0);
+            transition: transform 0.1s ease-out;
         }
 
         /* 3D地板 */
         .room-floor {
             position: absolute;
             bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #FFCC80 0%, #FFB74D 100%);
-            transform: rotateX(90deg) translateZ(-250px);
+            width: 120%;
+            height: 120%;
+            left: -10%;
+            background: 
+                radial-gradient(circle at 50% 50%, #FFCC80 0%, #FFB74D 100%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(0,0,0,0.05) 20px,
+                    rgba(0,0,0,0.05) 22px
+                );
+            transform: rotateX(90deg) translateZ(-300px);
             transform-origin: bottom;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
-        }
-
-        /* 地板纹理 */
-        .room-floor::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 20px,
-                rgba(0,0,0,0.05) 20px,
-                rgba(0,0,0,0.05) 22px
-            );
+            box-shadow: 
+                inset 0 0 50px rgba(0,0,0,0.1),
+                0 10px 20px rgba(0,0,0,0.2);
         }
 
         /* 3D后墙 */
         .room-back-wall {
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+            left: -10%;
+            right: -10%;
             height: 100%;
-            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
-            transform: translateZ(-250px);
+            background: 
+                linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 30px,
+                    rgba(0,0,0,0.03) 30px,
+                    rgba(0,0,0,0.03) 31px
+                );
+            transform: translateZ(-300px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
 
         /* 3D左墙 */
         .room-left-wall {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 250px;
+            left: -10%;
+            width: 300px;
             height: 100%;
-            background: linear-gradient(135deg, #FFE0E0 0%, #FFC0CB 100%);
+            background: 
+                linear-gradient(135deg, #FFE0E0 0%, #FFC0CB 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 30px,
+                    rgba(0,0,0,0.03) 30px,
+                    rgba(0,0,0,0.03) 31px
+                );
             transform: rotateY(-90deg) translateZ(0);
             transform-origin: left;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
 
         /* 3D右墙 */
         .room-right-wall {
             position: absolute;
             top: 0;
-            right: 0;
-            width: 250px;
+            right: -10%;
+            width: 300px;
             height: 100%;
-            background: linear-gradient(135deg, #FFE0E0 0%, #FFC0CB 100%);
+            background: 
+                linear-gradient(135deg, #FFE0E0 0%, #FFC0CB 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 30px,
+                    rgba(0,0,0,0.03) 30px,
+                    rgba(0,0,0,0.03) 31px
+                );
             transform: rotateY(90deg) translateZ(0);
             transform-origin: right;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* 3D天花板 */
+        .room-ceiling {
+            position: absolute;
+            top: 0;
+            left: -10%;
+            right: -10%;
+            height: 120%;
+            background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+            transform: rotateX(-90deg) translateZ(-300px);
+            transform-origin: top;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
         }
 
         /* 3D窗户 */
         .window {
             position: absolute;
-            top: 60px;
-            right: 60px;
-            width: 120px;
-            height: 100px;
+            top: 80px;
+            right: 80px;
+            width: 150px;
+            height: 120px;
             background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
             border: 4px solid #8B4513;
             border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transform: translateZ(-245px);
+            box-shadow: 
+                0 4px 8px rgba(0,0,0,0.2),
+                inset 0 0 20px rgba(255,255,255,0.5);
+            transform: translateZ(-295px);
         }
 
         .window::before {
@@ -205,24 +248,26 @@
         /* 3D空调 */
         .air-conditioner {
             position: absolute;
-            top: 20px;
-            right: 60px;
-            width: 120px;
-            height: 30px;
+            top: 30px;
+            right: 80px;
+            width: 150px;
+            height: 40px;
             background: #E0E0E0;
             border: 3px solid #BDBDBD;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transform: translateZ(-245px);
+            box-shadow: 
+                0 2px 5px rgba(0,0,0,0.2),
+                inset 0 0 10px rgba(0,0,0,0.1);
+            transform: translateZ(-295px);
         }
 
         .air-conditioner::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 10px;
-            right: 10px;
-            height: 10px;
+            bottom: -12px;
+            left: 15px;
+            right: 15px;
+            height: 12px;
             background: #BDBDBD;
             border-radius: 0 0 5px 5px;
         }
@@ -230,66 +275,97 @@
         /* 3D植物 */
         .plant {
             position: absolute;
-            bottom: 50px;
-            left: 40px;
-            transform: translateZ(-100px);
+            bottom: 80px;
+            left: 60px;
+            transform: translateZ(-150px);
+            transform-style: preserve-3d;
         }
 
         .plant-pot {
-            width: 30px;
-            height: 20px;
-            background: #8D6E63;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 40px;
+            height: 25px;
+            background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .plant-leaves {
             position: absolute;
-            top: -30px;
-            left: 5px;
+            top: -40px;
+            left: 10px;
             width: 20px;
+            height: 40px;
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            border-radius: 20px 20px 0 0;
+            transform: rotateZ(15deg);
+        }
+
+        .plant-leaves::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            width: 15px;
             height: 30px;
-            background: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
             border-radius: 15px 15px 0 0;
+            transform: rotateZ(-30deg);
+        }
+
+        .plant-leaves::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            width: 15px;
+            height: 35px;
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            border-radius: 15px 15px 0 0;
+            transform: rotateZ(30deg);
         }
 
         /* 3D工作台 */
         .workbench {
             position: absolute;
-            bottom: 100px;
+            bottom: 120px;
             left: 50%;
-            transform: translateX(-50%) translateZ(-50px);
-            width: 200px;
-            height: 80px;
+            transform: translateX(-50%) translateZ(-100px);
+            width: 220px;
+            height: 90px;
             background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
-            border-radius: 5px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            box-shadow: 
+                0 8px 16px rgba(0,0,0,0.4),
+                inset 0 0 20px rgba(0,0,0,0.2);
             transform-style: preserve-3d;
         }
 
         .workbench::before {
             content: '';
             position: absolute;
-            top: -10px;
-            left: 10px;
-            right: 10px;
-            height: 15px;
-            background: #DEB887;
-            border-radius: 3px 3px 0 0;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+            top: -12px;
+            left: 15px;
+            right: 15px;
+            height: 18px;
+            background: linear-gradient(135deg, #DEB887 0%, #D2B48C 100%);
+            border-radius: 5px 5px 0 0;
+            box-shadow: 
+                0 -3px 8px rgba(0,0,0,0.3),
+                inset 0 0 10px rgba(0,0,0,0.1);
         }
 
         /* 工作台腿 */
         .workbench-leg {
             position: absolute;
-            width: 10px;
-            height: 40px;
-            background: #8B4513;
-            bottom: -40px;
+            width: 12px;
+            height: 50px;
+            background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+            bottom: -50px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .workbench-leg:nth-child(1) { left: 20px; }
-        .workbench-leg:nth-child(2) { right: 20px; }
+        .workbench-leg:nth-child(1) { left: 25px; }
+        .workbench-leg:nth-child(2) { right: 25px; }
 
         /* 高分辨率拼豆板 */
         .perler-board {
@@ -1278,6 +1354,7 @@
                     <div class="room-back-wall"></div>
                     <div class="room-left-wall"></div>
                     <div class="room-right-wall"></div>
+                    <div class="room-ceiling"></div>
                     
                     <!-- 窗户 -->
                     <div class="window"></div>
@@ -2641,6 +2718,79 @@
             }
         };
 
+        // 3D场景交互
+        let isDragging = false;
+        let startX, startY;
+        let currentRotationX = 25;
+        let currentRotationY = 0;
+
+        // 初始化3D交互
+        const init3DInteraction = () => {
+            const roomContainer = document.querySelector('.room-3d-container');
+            const perlerRoom = document.getElementById('perlerRoom');
+
+            if (roomContainer && perlerRoom) {
+                // 鼠标按下事件
+                perlerRoom.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                });
+
+                // 鼠标移动事件
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+
+                    currentRotationY += deltaX * 0.5;
+                    currentRotationX -= deltaY * 0.5;
+
+                    // 限制旋转角度
+                    currentRotationX = Math.max(-30, Math.min(60, currentRotationX));
+
+                    roomContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg) translateZ(0)`;
+
+                    startX = e.clientX;
+                    startY = e.clientY;
+                });
+
+                // 鼠标释放事件
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                // 触摸支持
+                perlerRoom.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+
+                    const deltaX = e.touches[0].clientX - startX;
+                    const deltaY = e.touches[0].clientY - startY;
+
+                    currentRotationY += deltaX * 0.5;
+                    currentRotationX -= deltaY * 0.5;
+
+                    currentRotationX = Math.max(-30, Math.min(60, currentRotationX));
+
+                    roomContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg) translateZ(0)`;
+
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                });
+
+                document.addEventListener('touchend', () => {
+                    isDragging = false;
+                });
+            }
+        };
+
         // 保存目标
         const saveGoal = (type, value) => {
             const goals = storage.get('goals') || { daily: 60, weekly: 300 };
@@ -2915,6 +3065,9 @@
             
             // 初始化房间
             loadRoomData();
+            
+            // 初始化3D交互
+            init3DInteraction();
             
             // 初始化拼豆系统
             initPerlerBoard();
