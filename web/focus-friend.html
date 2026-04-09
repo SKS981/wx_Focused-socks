@@ -275,11 +275,11 @@
             box-shadow: inset -2px -2px 4px rgba(0,0,0,0.4);
         }
 
-        /* 小土豆角色（等距视角） */
+        /* 2.5D像素风格小土豆角色 */
         .potato-character {
             position: absolute;
-            width: 120px;
-            height: 140px;
+            width: 140px;
+            height: 180px;
             bottom: 100px;
             left: 30%;
             transition: all 0.5s ease;
@@ -287,105 +287,138 @@
             transform: skewY(-15deg);
         }
 
-        /* 土豆身体 */
+        /* 土豆身体 - 像素风格 */
         .potato-body {
             position: relative;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 50%;
+            width: 120px;
+            height: 120px;
             margin: 0 auto;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            transform: translateZ(10px);
         }
 
-        /* 土豆眼睛 */
-        .potato-eye {
+        /* 像素身体 */
+        .potato-pixel-body {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(45deg, 
+                    #FFD700 0%, #FFD700 25%, 
+                    #FFA500 25%, #FFA500 50%, 
+                    #FFD700 50%, #FFD700 75%, 
+                    #FFA500 75%, #FFA500 100%
+                );
+            background-size: 20px 20px;
+            border: 3px solid #8B4513;
             border-radius: 50%;
-            top: 30px;
-            box-shadow: inset 0 0 0 4px #333, 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
 
-        .potato-eye.left { left: 20px; }
-        .potato-eye.right { right: 20px; }
-
-        /* 土豆瞳孔 */
-        .potato-eye::after {
-            content: '';
+        /* 土豆叶子 */
+        .potato-leaf {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #333;
-            border-radius: 50%;
-            top: 6px;
-            left: 6px;
-            animation: eye-move 3s infinite ease-in-out;
-        }
-
-        @keyframes eye-move {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(2px, 2px); }
-            50% { transform: translate(0, 0); }
-            75% { transform: translate(-2px, 2px); }
-        }
-
-        /* 土豆腮红 */
-        .potato-blush {
-            position: absolute;
-            width: 15px;
-            height: 10px;
-            background: rgba(255, 105, 180, 0.8);
-            border-radius: 50%;
-            top: 55px;
-            box-shadow: 0 1px 3px rgba(255, 105, 180, 0.5);
-        }
-
-        .potato-blush.left { left: 15px; }
-        .potato-blush.right { right: 15px; }
-
-        /* 土豆嘴巴 */
-        .potato-mouth {
-            position: absolute;
-            width: 25px;
-            height: 12px;
-            border-bottom: 5px solid #333;
-            border-radius: 0 0 50% 50%;
-            top: 60px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
         }
 
-        /* 土豆手臂 */
-        .potato-arm {
-            position: absolute;
-            width: 30px;
-            height: 12px;
-            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 15px;
-            top: 45px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .potato-arm.left {
-            left: -20px;
-            transform: rotate(-30deg);
-        }
-
-        .potato-arm.right {
-            right: -20px;
-            transform: rotate(30deg);
-        }
-
-        /* 土豆手部 */
-        .potato-hand {
+        .leaf {
             position: absolute;
             width: 15px;
             height: 15px;
-            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
+            background: #4CAF50;
+            border: 2px solid #2E7D32;
+            border-radius: 0 50% 50% 50%;
+        }
+
+        .leaf:nth-child(1) {
+            top: 0;
+            left: 12px;
+            transform: rotate(-30deg);
+        }
+
+        .leaf:nth-child(2) {
+            top: -5px;
+            left: 20px;
+            transform: rotate(30deg);
+        }
+
+        .leaf:nth-child(3) {
+            top: -8px;
+            left: 8px;
+            transform: rotate(-60deg);
+        }
+
+        /* 土豆眼睛 - 像素风格 */
+        .potato-eye {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #333;
+            top: 40px;
+            border: 2px solid #000;
+        }
+
+        .potato-eye.left { left: 30px; }
+        .potato-eye.right { right: 30px; }
+
+        /* 土豆腮红 - 像素风格 */
+        .potato-blush {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #FF69B4;
+            top: 60px;
+            border: 2px solid #8B0000;
+        }
+
+        .potato-blush.left { left: 25px; }
+        .potato-blush.right { right: 25px; }
+
+        /* 土豆嘴巴 - 像素风格 */
+        .potato-mouth {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            background: #FF69B4;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid #8B0000;
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* 土豆手臂 - 像素风格 */
+        .potato-arm {
+            position: absolute;
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(45deg, #FFD700 0%, #FFA500 100%);
+            border: 2px solid #8B4513;
+            top: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .potato-arm.left {
+            left: -10px;
+            transform: rotate(-45deg);
+        }
+
+        .potato-arm.right {
+            right: -10px;
+            transform: rotate(45deg);
+        }
+
+        /* 土豆手部 - 像素风格 */
+        .potato-hand {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(45deg, #FFD700 0%, #FFA500 100%);
+            border: 2px solid #8B4513;
             border-radius: 50%;
             top: -2px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -399,44 +432,33 @@
             right: -5px;
         }
 
-        /* 土豆腿部 */
+        /* 土豆腿部 - 像素风格 */
         .potato-leg {
             position: absolute;
-            width: 25px;
-            height: 30px;
-            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 0 0 50% 50%;
-            bottom: -20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(180deg, #FFD700 0%, #FF6347 100%);
+            border: 2px solid #8B4513;
+            bottom: -25px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .potato-leg.left { left: 25px; }
-        .potato-leg.right { right: 25px; }
+        .potato-leg.left { left: 30px; }
+        .potato-leg.right { right: 30px; }
 
-        /* 土豆脚部 */
+        /* 土豆脚部 - 像素风格 */
         .potato-foot {
             position: absolute;
-            width: 30px;
-            height: 15px;
-            background: linear-gradient(145deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 50%;
+            width: 35px;
+            height: 20px;
+            background: #FF6347;
+            border: 2px solid #8B4513;
             bottom: -5px;
             left: 50%;
             transform: translateX(-50%);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* 土豆表情变化 */
-        .potato-body::before {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 4px;
-            background: rgba(0,0,0,0.1);
             border-radius: 50%;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         /* 闲置动画 - 小土豆在房间里闲逛 */
@@ -461,7 +483,7 @@
 
         @keyframes potato-bounce {
             0%, 100% { transform: translateY(0) scaleX(var(--scale-x, 1)); }
-            50% { transform: translateY(-10px) scaleX(var(--scale-x, 1)); }
+            50% { transform: translateY(-12px) scaleX(var(--scale-x, 1)); }
         }
 
         .potato-character.idle {
@@ -481,17 +503,17 @@
         }
 
         .potato-character.focusing .potato-arm.left {
-            transform: rotate(-60deg) translateY(-20px);
+            transform: rotate(-75deg) translateY(-25px);
         }
 
         .potato-character.focusing .potato-arm.right {
-            transform: rotate(60deg) translateY(-20px);
+            transform: rotate(75deg) translateY(-25px);
         }
 
         /* 拼豆动画 */
         @keyframes beading {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-10px); }
         }
 
         .potato-character.focusing .potato-arm {
@@ -1223,20 +1245,33 @@
                     </div>
                 </div>
                 
-                <!-- Q版小土豆角色 -->
+                <!-- 2.5D像素风格小土豆角色 -->
                 <div class="potato-character idle" id="potatoCharacter">
                     <div class="potato-body">
+                        <!-- 土豆叶子 -->
+                        <div class="potato-leaf">
+                            <div class="leaf"></div>
+                            <div class="leaf"></div>
+                            <div class="leaf"></div>
+                        </div>
+                        <!-- 像素身体 -->
+                        <div class="potato-pixel-body"></div>
+                        <!-- 眼睛 -->
                         <div class="potato-eye left"></div>
                         <div class="potato-eye right"></div>
+                        <!-- 腮红 -->
                         <div class="potato-blush left"></div>
                         <div class="potato-blush right"></div>
+                        <!-- 嘴巴 -->
                         <div class="potato-mouth"></div>
+                        <!-- 手臂 -->
                         <div class="potato-arm left">
                             <div class="potato-hand"></div>
                         </div>
                         <div class="potato-arm right">
                             <div class="potato-hand"></div>
                         </div>
+                        <!-- 腿部 -->
                         <div class="potato-leg left">
                             <div class="potato-foot"></div>
                         </div>
