@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Friend - 游戏化陪伴式专注计时器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFEFD5 100%);
+            color: #333333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* 主内容 */
+        .main-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 计时器部分 */
+        .timer-section {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .timer-display {
+            font-size: 72px;
+            font-weight: 700;
+            color: #FF6B6B;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .time-btn {
+            padding: 12px 24px;
+            background: #F8F9FA;
+            border: 2px solid #E9ECEF;
+            border-radius: 12px;
+            color: #495057;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-btn:hover {
+            background: #E9ECEF;
+        }
+
+        .time-btn.active {
+            background: #FF6B6B;
+            border-color: #FF6B6B;
+            color: #ffffff;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn.primary {
+            background: #4ECDC4;
+            color: #ffffff;
+        }
+
+        .control-btn.primary:hover {
+            background: #45B7AA;
+            transform: translateY(-2px);
+        }
+
+        .control-btn.secondary {
+            background: #F8F9FA;
+            color: #495057;
+            border: 2px solid #E9ECEF;
+        }
+
+        .control-btn.secondary:hover {
+            background: #E9ECEF;
+        }
+
+        /* 小土豆角色 */
+        .potato-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .potato-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+
+        .potato {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+        }
+
+        .potato.happy {
+            animation: bounce 2s infinite;
+        }
+
+        .potato.sad {
+            animation: droop 1s ease-in-out;
+        }
+
+        .potato.working {
+            animation: knit 3s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes droop {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        @keyframes knit {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+
+        .potato-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .potato-image::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .potato-eyes {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .eye {
+            width: 20px;
+            height: 20px;
+            background: #333333;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .eye::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 8px;
+            height: 8px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .potato-mouth {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            background: #333333;
+            border-radius: 0 0 20px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .potato.sad .potato-mouth {
+            border-radius: 20px 20px 0 0;
+            height: 15px;
+        }
+
+        .potato.happy .potato-mouth {
+            height: 25px;
+        }
+
+        .potato-status {
+            font-size: 18px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        /* 积分系统 */
+        .points-section {
+            background: #F8F9FA;
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .points-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .points-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFD700;
+            display: flex;
+            align-items: center;
+        }
+
+        .points-value::before {
+            content: '🧦';
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .points-history {
+            font-size: 14px;
+            color: #6C757D;
+        }
+
+        /* 商店部分 */
+        .shop-section {
+            width: 100%;
+        }
+
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .shop-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .shop-item {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-item.owned {
+            background: #E8F5E8;
+            border: 2px solid #4CAF50;
+        }
+
+        .shop-item-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .shop-item-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .shop-item-price {
+            font-size: 14px;
+            color: #6C757D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-item-price::before {
+            content: '🧦';
+            margin-right: 5px;
+            font-size: 12px;
+        }
+
+        .shop-item-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .shop-item-button.buy {
+            background: #4ECDC4;
+            color: #ffffff;
+        }
+
+        .shop-item-button.buy:hover {
+            background: #45B7AA;
+        }
+
+        .shop-item-button.equip {
+            background: #FFD700;
+            color: #333333;
+        }
+
+        .shop-item-button.equip:hover {
+            background: #FFC107;
+        }
+
+        .shop-item-button.equipped {
+            background: #6C757D;
+            color: #ffffff;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .timer-display {
+                font-size: 48px;
+            }
+
+            .time-selector {
+                flex-wrap: wrap;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .control-btn {
+                width: 200px;
+            }
+
+            .potato-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .shop-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 通知样式 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4ECDC4;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #FF6B6B;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>Focus Friend</h1>
+            <p>游戏化陪伴式专注计时器</p>
+        </div>
+
+        <!-- 主内容 -->
+        <div class="main-content">
+            <!-- 计时器部分 -->
+            <div class="timer-section">
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                
+                <div class="time-selector">
+                    <button class="time-btn active" data-time="25">25分钟</button>
+                    <button class="time-btn" data-time="50">50分钟</button>
+                    <button class="time-btn" data-time="75">75分钟</button>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="control-btn primary" id="startBtn">开始专注</button>
+                    <button class="control-btn secondary" id="pauseBtn" disabled>暂停</button>
+                    <button class="control-btn secondary" id="resetBtn" disabled>重置</button>
+                </div>
+            </div>
+
+            <!-- 小土豆角色 -->
+            <div class="potato-section">
+                <div class="potato-container">
+                    <div class="potato happy" id="potatoCharacter">
+                        <div class="potato-image">
+                            <div class="potato-eyes">
+                                <div class="eye"></div>
+                                <div class="eye"></div>
+                            </div>
+                            <div class="potato-mouth"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="potato-status" id="potatoStatus">准备开始专注！</div>
+            </div>
+
+            <!-- 积分系统 -->
+            <div class="points-section">
+                <div class="points-header">
+                    <div class="points-title">袜子积分</div>
+                    <div class="points-value" id="pointsValue">0</div>
+                </div>
+                <div class="points-history" id="pointsHistory">完成专注 session 获得积分</div>
+            </div>
+
+            <!-- 商店部分 -->
+            <div class="shop-section">
+                <div class="shop-header">
+                    <div class="shop-title">装饰商店</div>
+                </div>
+                <div class="shop-grid" id="shopGrid">
+                    <!-- 商店物品将通过 JavaScript 动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知 -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // 全局变量
+        let currentTime = 25 * 60;
+        let timerInterval = null;
+        let isRunning = false;
+        let isPaused = false;
+        let points = 0;
+        let items = [];
+        let equippedItems = [];
+
+        // DOM 元素
+        const elements = {
+            timerDisplay: document.getElementById('timerDisplay'),
+            startBtn: document.getElementById('startBtn'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            potatoCharacter: document.getElementById('potatoCharacter'),
+            potatoStatus: document.getElementById('potatoStatus'),
+            pointsValue: document.getElementById('pointsValue'),
+            pointsHistory: document.getElementById('pointsHistory'),
+            shopGrid: document.getElementById('shopGrid'),
+            notification: document.getElementById('notification')
+        };
+
+        // 商店物品数据
+        const shopItems = [
+            { id: 1, name: '太阳镜', icon: '🕶️', price: 10, type: 'accessory' },
+            { id: 2, name: '帽子', icon: '🎩', price: 15, type: 'accessory' },
+            { id: 3, name: '围巾', icon: '🧣', price: 20, type: 'accessory' },
+            { id: 4, name: '背景墙', icon: '🎨', price: 25, type: 'decoration' },
+            { id: 5, name: '地毯', icon: '🟥', price: 30, type: 'decoration' },
+            { id: 6, name: '植物', icon: '🌱', price: 35, type: 'decoration' }
+        ];
+
+        // 初始化
+        function init() {
+            loadData();
+            updateTimerDisplay();
+            updatePointsDisplay();
+            renderShop();
+            setupEventListeners();
+        }
+
+        // 加载数据
+        function loadData() {
+            const savedPoints = localStorage.getItem('focusFriendPoints');
+            const savedItems = localStorage.getItem('focusFriendItems');
+            const savedEquipped = localStorage.getItem('focusFriendEquipped');
+
+            if (savedPoints) {
+                points = parseInt(savedPoints);
+            }
+
+            if (savedItems) {
+                items = JSON.parse(savedItems);
+            } else {
+                // 初始化物品数据
+                items = shopItems.map(item => ({
+                    ...item,
+                    owned: false
+                }));
+                saveItems();
+            }
+
+            if (savedEquipped) {
+                equippedItems = JSON.parse(savedEquipped);
+            }
+        }
+
+        // 保存物品数据
+        function saveItems() {
+            localStorage.setItem('focusFriendPoints', points.toString());
+            localStorage.setItem('focusFriendItems', JSON.stringify(items));
+            localStorage.setItem('focusFriendEquipped', JSON.stringify(equippedItems));
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 时间选择
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTime = parseInt(this.dataset.time) * 60;
+                    updateTimerDisplay();
+                });
+            });
+
+            // 开始按钮
+            elements.startBtn.addEventListener('click', startTimer);
+
+            // 暂停按钮
+            elements.pauseBtn.addEventListener('click', pauseTimer);
+
+            // 重置按钮
+            elements.resetBtn.addEventListener('click', resetTimer);
+        }
+
+        // 开始计时器
+        function startTimer() {
+            if (isRunning) return;
+
+            isRunning = true;
+            isPaused = false;
+            
+            elements.startBtn.disabled = true;
+            elements.pauseBtn.disabled = false;
+            elements.resetBtn.disabled = false;
+
+            // 更新土豆状态
+            elements.potatoCharacter.className = 'potato working';
+            elements.potatoStatus.textContent = '正在专注工作中...';
+
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    currentTime--;
+                    updateTimerDisplay();
+
+                    if (currentTime <= 0) {
+                        clearInterval(timerInterval);
+                        completeSession();
+                    }
+                }
+            }, 1000);
+        }
+
+        // 暂停计时器
+        function pauseTimer() {
+            isPaused = !isPaused;
+            elements.pauseBtn.textContent = isPaused ? '继续' : '暂停';
+
+            if (isPaused) {
+                // 土豆难过
+                elements.potatoCharacter.className = 'potato sad';
+                elements.potatoStatus.textContent = '分心了...';
+            } else {
+                // 土豆继续工作
+                elements.potatoCharacter.className = 'potato working';
+                elements.potatoStatus.textContent = '正在专注工作中...';
+            }
+        }
+
+        // 重置计时器
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            isPaused = false;
+
+            const selectedTime = document.querySelector('.time-btn.active').dataset.time;
+            currentTime = parseInt(selectedTime) * 60;
+
+            elements.startBtn.disabled = false;
+            elements.pauseBtn.disabled = true;
+            elements.resetBtn.disabled = true;
+            elements.pauseBtn.textContent = '暂停';
+
+            // 土豆恢复开心
+            elements.potatoCharacter.className = 'potato happy';
+            elements.potatoStatus.textContent = '准备开始专注！';
+
+            updateTimerDisplay();
+        }
+
+        // 完成会话
+        function completeSession() {
+            isRunning = false;
+
+            elements.startBtn.disabled = false;
+            elements.pauseBtn.disabled = true;
+            elements.resetBtn.disabled = true;
+            elements.pauseBtn.textContent = '暂停';
+
+            // 土豆开心
+            elements.potatoCharacter.className = 'potato happy';
+            elements.potatoStatus.textContent = '专注完成！';
+
+            // 奖励积分
+            const earnedPoints = Math.floor(currentTime / 5) + 5;
+            points += earnedPoints;
+            updatePointsDisplay();
+            elements.pointsHistory.textContent = `+${earnedPoints} 袜子积分 - 完成专注 session`;
+
+            // 显示通知
+            showNotification(`🎉 恭喜！获得 ${earnedPoints} 袜子积分`);
+
+            // 保存数据
+            saveItems();
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            elements.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 更新积分显示
+        function updatePointsDisplay() {
+            elements.pointsValue.textContent = points;
+        }
+
+        // 渲染商店
+        function renderShop() {
+            elements.shopGrid.innerHTML = '';
+
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = `shop-item ${item.owned ? 'owned' : ''}`;
+
+                const isEquipped = equippedItems.includes(item.id);
+
+                itemElement.innerHTML = `
+                    <div class="shop-item-icon">${item.icon}</div>
+                    <div class="shop-item-name">${item.name}</div>
+                    <div class="shop-item-price">${item.price}</div>
+                    <button class="shop-item-button ${item.owned ? (isEquipped ? 'equipped' : 'equip') : 'buy'}" data-id="${item.id}">
+                        ${item.owned ? (isEquipped ? '已装备' : '装备') : '购买'}
+                    </button>
+                `;
+
+                elements.shopGrid.appendChild(itemElement);
+            });
+
+            // 添加商店物品点击事件
+            document.querySelectorAll('.shop-item-button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.dataset.id);
+                    handleShopItemClick(itemId);
+                });
+            });
+        }
+
+        // 处理商店物品点击
+        function handleShopItemClick(itemId) {
+            const item = items.find(i => i.id === itemId);
+
+            if (!item) return;
+
+            if (!item.owned) {
+                // 购买物品
+                if (points >= item.price) {
+                    points -= item.price;
+                    item.owned = true;
+                    saveItems();
+                    updatePointsDisplay();
+                    renderShop();
+                    showNotification(`🛒 购买成功！-${item.price} 袜子积分`);
+                } else {
+                    showNotification('💸 积分不足！', 'error');
+                }
+            } else {
+                // 装备/取消装备
+                const isEquipped = equippedItems.includes(itemId);
+                
+                if (isEquipped) {
+                    // 取消装备
+                    equippedItems = equippedItems.filter(id => id !== itemId);
+                } else {
+                    // 装备
+                    // 同一类型只能装备一个
+                    const sameTypeItems = items.filter(i => i.type === item.type && i.owned);
+                    sameTypeItems.forEach(i => {
+                        equippedItems = equippedItems.filter(id => id !== i.id);
+                    });
+                    equippedItems.push(itemId);
+                }
+
+                saveItems();
+                renderShop();
+                showNotification(isEquipped ? '👕 已取消装备' : '👕 装备成功！');
+            }
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            elements.notification.textContent = message;
+            elements.notification.className = `notification show ${type === 'error' ? 'error' : ''}`;
+
+            setTimeout(() => {
+                elements.notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
