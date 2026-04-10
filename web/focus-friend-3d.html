@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注伙伴 - 3D 房间</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #scene-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .control-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="scene-container"></div>
+        <div class="controls">
+            <button class="control-btn" id="toggleDoorBtn">开关门</button>
+            <button class="control-btn" id="resetViewBtn">重置视角</button>
+        </div>
+        <div class="info">
+            提示：使用鼠标拖动旋转视角，滚轮缩放，Enter键开关门
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // 场景
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f8ff);
+
+        // 相机
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 2, 5);
+
+        // 渲染器
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+
+        // 控制器
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 2;
+        controls.maxDistance = 15;
+        controls.minPolarAngle = 0;
+        controls.maxPolarAngle = Math.PI / 2;
+
+        // 光照
+        // 环境光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        // 方向光（主光源）
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 7);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.camera.near = 0.5;
+        directionalLight.shadow.camera.far = 50;
+        directionalLight.shadow.camera.left = -10;
+        directionalLight.shadow.camera.right = 10;
+        directionalLight.shadow.camera.top = 10;
+        directionalLight.shadow.camera.bottom = -10;
+        scene.add(directionalLight);
+
+        // 补光点光源
+        const pointLight1 = new THREE.PointLight(0xffcc80, 0.4);
+        pointLight1.position.set(-3, 2, -3);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xffcc80, 0.4);
+        pointLight2.position.set(3, 2, 3);
+        scene.add(pointLight2);
+
+        // 房间尺寸
+        const roomSize = 8;
+        const wallHeight = 4;
+
+        // 材质
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: 0xfff3f3,
+            roughness: 0.8,
+            metalness: 0.1
+        });
+
+        const floorMaterial = new THREE.MeshStandardMaterial({
+            color: 0xa0522d,
+            roughness: 0.9,
+            metalness: 0.1,
+            map: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_COLOR.jpg'),
+            normalMap: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_NRM.jpg'),
+            aoMap: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_OCC.jpg')
+        });
+
+        // 地板
+        const floorGeometry = new THREE.PlaneGeometry(roomSize, roomSize);
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = 0;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // 墙壁
+        // 后墙
+        const backWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
+        const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+        backWall.position.set(0, wallHeight / 2, -roomSize / 2);
+        backWall.receiveShadow = true;
+        scene.add(backWall);
+
+        // 左墙
+        const leftWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
+        const leftWall = new THREE.Mesh(leftWallGeometry, wallMaterial);
+        leftWall.position.set(-roomSize / 2, wallHeight / 2, 0);
+        leftWall.rotation.y = Math.PI / 2;
+        leftWall.receiveShadow = true;
+        scene.add(leftWall);
+
+        // 右墙
+        const rightWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
+        const rightWall = new THREE.Mesh(rightWallGeometry, wallMaterial);
+        rightWall.position.set(roomSize / 2, wallHeight / 2, 0);
+        rightWall.rotation.y = -Math.PI / 2;
+        rightWall.receiveShadow = true;
+        scene.add(rightWall);
+
+        // 天花板
+        const ceilingGeometry = new THREE.PlaneGeometry(roomSize, roomSize);
+        const ceilingMaterial = new THREE.MeshStandardMaterial({
+            color: 0xf8f9fa,
+            roughness: 0.8,
+            metalness: 0.1
+        });
+        const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+        ceiling.rotation.x = Math.PI / 2;
+        ceiling.position.y = wallHeight;
+        scene.add(ceiling);
+
+        // 门
+        const doorGroup = new THREE.Group();
+        scene.add(doorGroup);
+
+        const doorGeometry = new THREE.PlaneGeometry(2, 2.5);
+        const doorMaterial = new THREE.MeshStandardMaterial({
+            color: 0x8b4513,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const door = new THREE.Mesh(doorGeometry, doorMaterial);
+        door.position.set(roomSize / 2, 1.25, 0);
+        door.rotation.y = -Math.PI / 2;
+        door.castShadow = true;
+        doorGroup.add(door);
+
+        // 门把手
+        const doorknobGeometry = new THREE.SphereGeometry(0.08, 16, 16);
+        const doorknobMaterial = new THREE.MeshStandardMaterial({
+            color: 0xc0c0c0,
+            roughness: 0.5,
+            metalness: 0.8
+        });
+        const doorknob = new THREE.Mesh(doorknobGeometry, doorknobMaterial);
+        doorknob.position.set(-0.8, 1.25, 0.01);
+        doorknob.castShadow = true;
+        door.add(doorknob);
+
+        // 家具
+        // 桌子
+        const tableGroup = new THREE.Group();
+        tableGroup.position.set(-1, 0.5, -1);
+        scene.add(tableGroup);
+
+        // 桌子腿
+        const tableLegGeometry = new THREE.BoxGeometry(0.1, 0.5, 0.1);
+        const tableLegMaterial = new THREE.MeshStandardMaterial({
+            color: 0x8b4513,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+
+        for (let i = 0; i < 4; i++) {
+            const leg = new THREE.Mesh(tableLegGeometry, tableLegMaterial);
+            leg.position.set(
+                (i % 2) * 0.8 - 0.4,
+                -0.25,
+                Math.floor(i / 2) * 0.8 - 0.4
+            );
+            leg.castShadow = true;
+            tableGroup.add(leg);
+        }
+
+        // 桌面
+        const tableTopGeometry = new THREE.BoxGeometry(1, 0.1, 1);
+        const tableTopMaterial = new THREE.MeshStandardMaterial({
+            color: 0xa0522d,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const tableTop = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
+        tableTop.castShadow = true;
+        tableTop.receiveShadow = true;
+        tableGroup.add(tableTop);
+
+        // 椅子
+        const chairGroup = new THREE.Group();
+        chairGroup.position.set(-1, 0.35, -2.5);
+        scene.add(chairGroup);
+
+        // 椅子腿
+        for (let i = 0; i < 4; i++) {
+            const leg = new THREE.Mesh(tableLegGeometry, tableLegMaterial);
+            leg.scale.set(0.8, 0.8, 0.8);
+            leg.position.set(
+                (i % 2) * 0.4 - 0.2,
+                -0.2,
+                Math.floor(i / 2) * 0.4 - 0.2
+            );
+            leg.castShadow = true;
+            chairGroup.add(leg);
+        }
+
+        // 椅子座
+        const chairSeatGeometry = new THREE.BoxGeometry(0.5, 0.05, 0.5);
+        const chairSeat = new THREE.Mesh(chairSeatGeometry, tableTopMaterial);
+        chairSeat.castShadow = true;
+        chairSeat.receiveShadow = true;
+        chairGroup.add(chairSeat);
+
+        // 椅子背
+        const chairBackGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.05);
+        const chairBack = new THREE.Mesh(chairBackGeometry, tableTopMaterial);
+        chairBack.position.set(0, 0.2, -0.225);
+        chairBack.castShadow = true;
+        chairGroup.add(chairBack);
+
+        // 地毯
+        const carpetGeometry = new THREE.PlaneGeometry(4, 3);
+        const carpetMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffb6c1,
+            roughness: 0.9,
+            metalness: 0.05
+        });
+        const carpet = new THREE.Mesh(carpetGeometry, carpetMaterial);
+        carpet.rotation.x = -Math.PI / 2;
+        carpet.position.set(0, 0.01, 0);
+        carpet.receiveShadow = true;
+        scene.add(carpet);
+
+        // 墙上的画
+        const paintingGeometry = new THREE.PlaneGeometry(1.5, 1);
+        const paintingMaterial = new THREE.MeshStandardMaterial({
+            color: 0xdeb887,
+            roughness: 0.8,
+            metalness: 0.1,
+            map: new THREE.TextureLoader().load('https://source.unsplash.com/random/400x300')
+        });
+        const painting = new THREE.Mesh(paintingGeometry, paintingMaterial);
+        painting.position.set(0, wallHeight / 2 + 0.5, -roomSize / 2 + 0.01);
+        painting.castShadow = true;
+        scene.add(painting);
+
+        // 窗户
+        const windowGeometry = new THREE.PlaneGeometry(2, 1.5);
+        const windowMaterial = new THREE.MeshStandardMaterial({
+            color: 0x87ceeb,
+            roughness: 0.3,
+            metalness: 0.1,
+            transparent: true,
+            opacity: 0.8
+        });
+        const window = new THREE.Mesh(windowGeometry, windowMaterial);
+        window.position.set(roomSize / 2 - 1, wallHeight / 2, 0);
+        window.rotation.y = -Math.PI / 2;
+        window.receiveShadow = true;
+        scene.add(window);
+
+        // 门的开关状态
+        let doorOpen = false;
+        const doorOpenAngle = Math.PI / 2;
+
+        // 开关门函数
+        function toggleDoor() {
+            doorOpen = !doorOpen;
+            const targetAngle = doorOpen ? doorOpenAngle : 0;
+            
+            // 平滑动画
+            let currentAngle = doorGroup.rotation.y;
+            const angleDiff = targetAngle - currentAngle;
+            const duration = 1000; // 动画持续时间（毫秒）
+            const startTime = Date.now();
+
+            function animateDoor() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 3); // 缓动函数
+                
+                doorGroup.rotation.y = currentAngle + angleDiff * easeProgress;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateDoor);
+                }
+            }
+
+            animateDoor();
+        }
+
+        // 重置视角
+        function resetView() {
+            camera.position.set(0, 2, 5);
+            controls.target.set(0, 1, 0);
+            controls.update();
+        }
+
+        // 事件监听
+        document.getElementById('toggleDoorBtn').addEventListener('click', toggleDoor);
+        document.getElementById('resetViewBtn').addEventListener('click', resetView);
+
+        // 键盘事件
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                toggleDoor();
+            }
+        });
+
+        // 窗口大小调整
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
