@@ -126,6 +126,70 @@
             transform-style: preserve-3d;
         }
 
+        /* 拼豆板样式 */
+        .perler-board {
+            width: 160px;
+            height: 160px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: #FFF8DC;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
+
+        .perler-bead {
+            width: 20px;
+            height: 20px;
+            box-sizing: border-box;
+            border: 1px solid #FFD700;
+        }
+
+        /* 拼豆图案展示区 */
+        .pattern-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 200px;
+        }
+
+        .pattern-display h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .current-pattern {
+            width: 160px;
+            height: 160px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            margin: 10px 0;
+            background: #FFF8DC;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
+
+        /* 角色状态 */
+        .character-status {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
         /* 3D房间基础样式 */
         .face {
             position: absolute;
@@ -296,6 +360,519 @@
             height: 100%;
             width: 100%;
             background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.75), rgba(84, 116, 251, 0.75), transparent);
+        }
+
+        .alt__top .light:nth-of-type(2) {
+            position: absolute;
+            left: 4vw;
+            height: 100%;
+            width: 6vw;
+            background-image: linear-gradient(to bottom, transparent 20%, rgba(40, 60, 210, 0.75), rgba(84, 116, 251, 0.25) 80%);
+            filter: blur(.1vw);
+        }
+
+        .alt__top .light:nth-of-type(3) {
+            position: absolute;
+            bottom: 10vw;
+            left: 5vw;
+            width: 6vw;
+            height: 3vw;
+            border-radius: 50%;
+            transform: rotateZ(42deg);
+            background-image: radial-gradient(rgba(135, 160, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.55vw);
+        }
+
+        .alt__top .light:nth-of-type(4) {
+            position: absolute;
+            bottom: 7vw;
+            left: 4vw;
+            width: 8.5vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(135, 160, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.55vw);
+        }
+
+        .alt__top .light:nth-of-type(5) {
+            position: absolute;
+            bottom: 3.5vw;
+            left: 4.5vw;
+            width: 6vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(147, 170, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.75vw);
+        }
+
+        .alt__top .light:nth-of-type(6) {
+            position: absolute;
+            bottom: 3vw;
+            left: .5vw;
+            width: 4vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(147, 170, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.35vw);
+        }
+
+        .alt__top .light:nth-of-type(7) {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, #0f111e, var(--neon-1) 10%, transparent 20%);
+        }
+
+        .alt__top .light:nth-of-type(7)::before {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.6), transparent 60%);
+        }
+
+        .alt__top .light:nth-of-type(7)::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.5), transparent 60%);
+        }
+
+        .alt__top .light:nth-of-type(8) {
+            position: absolute;
+            bottom: 5vw;
+            left: 10vw;
+            width: 6vw;
+            height: 4vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(251, 250, 254, 0.1) 50%, rgba(158, 153, 193, 0.1));
+            filter: blur(.8vw);
+        }
+
+        .alt__bottom {
+            width: 27vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-27vw);
+        }
+
+        /* 地板 */
+        .alb {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 27vw;
+            height: 1vw;
+        }
+
+        .alb__front {
+            width: 27vw;
+            height: 2vw;
+            background-image: linear-gradient(to right, var(--white-2) 40%, #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(2vw - (0.5vw * 2)));
+        }
+
+        .alb__back {
+            width: 27vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-27vw) translateY(-2vw);
+        }
+
+        .alb__right {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(27vw) translateX(-1vw) translateY(-2vw);
+        }
+
+        .alb__left {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-2vw);
+        }
+
+        .alb__top {
+            width: 27vw;
+            height: 1vw;
+            background-image: linear-gradient(to right, var(--white-1) 40%, #E6E5F0);
+            transform-origin: top left;
+            transform: translateZ(2vw);
+        }
+
+        .alb__bottom {
+            width: 27vw;
+            height: 1vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-27vw);
+        }
+
+        /* 右侧墙壁 */
+        .arb {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 1vw;
+            height: 28vw;
+        }
+
+        .arb__front {
+            width: 1vw;
+            height: 2vw;
+            background-color: #8A85B1;
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(2vw - (14vw * 2)));
+        }
+
+        .arb__back {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-2vw);
+        }
+
+        .arb__right {
+            width: 28vw;
+            height: 2vw;
+            background-image: linear-gradient(to right, var(--white-4) 40%, #1a182c);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-28vw) translateY(-2vw);
+        }
+
+        .arb__left {
+            width: 28vw;
+            height: 2vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-2vw);
+        }
+
+        .arb__top {
+            width: 1vw;
+            height: 28vw;
+            background-image: linear-gradient(to top, var(--white-1), #322e4a 25%, #1a182c 75%, var(--white-2));
+            transform-origin: top left;
+            transform: translateZ(2vw);
+        }
+
+        .arb__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 30%;
+            top: 0;
+            background-image: linear-gradient(to bottom, transparent, rgba(84, 116, 251, 0.85), transparent);
+        }
+
+        .arb__bottom {
+            width: 1vw;
+            height: 28vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        /* 左侧墙壁 */
+        .blt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1vw;
+            height: 27vw;
+            transform: translateZ(.5vw);
+        }
+
+        .blt__front {
+            width: 1vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, var(--white-3), var(--white-2));
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(20vw - (13.5vw * 2)));
+        }
+
+        .blt__back {
+            width: 1vw;
+            height: 20vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-20vw);
+        }
+
+        .blt__right {
+            width: 27vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #1a182c, var(--white-3), var(--white-3) 90%, #1c193a);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-27vw) translateY(-20vw);
+        }
+
+        .blt__right::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: .75vw;
+            background-image: linear-gradient(to bottom, #8A85B1, var(--neon-2));
+            border-top: .1vw solid var(--white-4);
+            border-bottom: .1vw solid var(--white-4);
+        }
+
+        .blt__right::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.35), transparent 30%, transparent 70%, rgba(40, 60, 210, 0.35));
+        }
+
+        .blt__left {
+            width: 27vw;
+            height: 20vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-20vw);
+        }
+
+        .blt__bottom {
+            width: 1vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        /* 左侧墙壁装饰 */
+        .blt2 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2vw;
+            height: 27vw;
+            transform: translateZ(20.5vw);
+        }
+
+        .blt2__front {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.75vw - (13.5vw * 2)));
+        }
+
+        .blt2__back {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-2vw) translateY(-0.75vw);
+        }
+
+        .blt2__right {
+            width: 27vw;
+            height: 0.75vw;
+            background-image: linear-gradient(to right, #8A85B1, var(--white-2), #7A75A1);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(2vw) translateX(-27vw) translateY(-0.75vw);
+        }
+
+        .blt2__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            border-bottom: .1vw solid rgba(251, 250, 254, 0.75);
+            background-image: linear-gradient(to top, rgba(84, 116, 251, 0.35), transparent);
+        }
+
+        .blt2__left {
+            width: 27vw;
+            height: 0.75vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.75vw);
+        }
+
+        .blt2__top {
+            width: 2vw;
+            height: 27vw;
+            background-image: linear-gradient(to top, var(--white-2), var(--white-1));
+            transform-origin: top left;
+            transform: translateZ(0.75vw);
+        }
+
+        .blt2__bottom {
+            width: 2vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-2vw);
+        }
+
+        /* 后墙 */
+        .blb {
+            position: absolute;
+            left: 1vw;
+            top: 0;
+            width: 26vw;
+            height: 1vw;
+            transform: translateZ(.5vw);
+        }
+
+        .blb__front {
+            width: 26vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #5A557B, #6A658B 20%, #5A557B);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(20vw - (0.5vw * 2)));
+        }
+
+        .blb__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.25), transparent 20%, transparent 80%, rgba(40, 60, 210, 0.5)),
+                            linear-gradient(to right, rgba(31, 33, 88, 0.35), transparent),
+                            linear-gradient(to bottom, rgba(31, 33, 88, 0.35), transparent),
+                            linear-gradient(to bottom, rgba(10, 20, 100, 0.5), transparent 20%, transparent 80%, rgba(40, 60, 210, 0.25));
+        }
+
+        .blb__front::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: .75vw;
+            background-image: linear-gradient(to bottom, #8A85B1, var(--neon-2));
+            border-top: .1vw solid var(--white-4);
+            border-bottom: .1vw solid var(--white-4);
+        }
+
+        .blb__back {
+            width: 26vw;
+            height: 20vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-26vw) translateY(-20vw);
+        }
+
+        .blb__right {
+            width: 1vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #1a182c, #161426 80%, #1a182c);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(26vw) translateX(-1vw) translateY(-20vw);
+        }
+
+        .blb__bottom {
+            width: 26vw;
+            height: 1vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-26vw);
+        }
+
+        /* 后墙装饰 */
+        .blb2 {
+            position: absolute;
+            left: 2vw;
+            top: 0;
+            width: 25vw;
+            height: 1vw;
+            transform: translateZ(20.5vw);
+        }
+
+        .blb2__front {
+            width: 25vw;
+            height: 0.75vw;
+            background-image: linear-gradient(to right, #7A75A1, var(--white-2), #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.75vw - (1vw * 2)));
+        }
+
+        .blb2__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            border-bottom: .1vw solid rgba(251, 250, 254, 0.75);
+            background-image: linear-gradient(to top, rgba(40, 60, 210, 0.25), transparent);
+        }
+
+        .blb2__back {
+            width: 25vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-25vw) translateY(-0.75vw);
+        }
+
+        .blb2__right {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: #1a182c;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(25vw) translateX(-2vw) translateY(-0.75vw);
+        }
+
+        .blb2__left {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.75vw);
+        }
+
+        .blb2__top {
+            width: 25vw;
+            height: 2vw;
+            background-image: linear-gradient(to left, var(--white-2), var(--white-1));
+            transform-origin: top left;
+            transform: translateZ(0.75vw);
+        }
+
+        .blb2__bottom {
+            width: 25vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-25vw);
+        }
+
+        /* 动画 */
+        @keyframes pantalla-tv {
+            0% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes luz-tv {
+            0% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 0.9;
+            }
         }
 
         .room-controls {
@@ -1084,6 +1661,54 @@
                             <div class="blb2__top face"></div>
                             <div class="blb2__bottom face"></div>
                         </div>
+
+                        <!-- 扬声器 -->
+                        <div class="bocina-l">
+                            <div class="bocina-l__front face"></div>
+                            <div class="bocina-l__back face"></div>
+                            <div class="bocina-l__right face"></div>
+                            <div class="bocina-l__left face"></div>
+                            <div class="bocina-l__top face"></div>
+                            <div class="bocina-l__bottom face"></div>
+                        </div>
+
+                        <div class="bocina-r">
+                            <div class="bocina-r__front face"></div>
+                            <div class="bocina-r__back face"></div>
+                            <div class="bocina-r__right face"></div>
+                            <div class="bocina-r__left face"></div>
+                            <div class="bocina-r__top face"></div>
+                            <div class="bocina-r__bottom face"></div>
+                        </div>
+
+                        <!-- 搁板 -->
+                        <div class="repisa-t">
+                            <div class="repisa-t__front face"></div>
+                            <div class="repisa-t__back face"></div>
+                            <div class="repisa-t__right face"></div>
+                            <div class="repisa-t__left face"></div>
+                            <div class="repisa-t__top face"></div>
+                            <div class="repisa-t__bottom face"></div>
+                        </div>
+
+                        <div class="repisa-b">
+                            <div class="repisa-b__front face"></div>
+                            <div class="repisa-b__back face"></div>
+                            <div class="repisa-b__right face"></div>
+                            <div class="repisa-b__left face"></div>
+                            <div class="repisa-b__top face"></div>
+                            <div class="repisa-b__bottom face"></div>
+                        </div>
+
+                        <!-- 电视 -->
+                        <div class="tv">
+                            <div class="tv__front face"></div>
+                            <div class="tv__back face"></div>
+                            <div class="tv__right face"></div>
+                            <div class="tv__left face"></div>
+                            <div class="tv__top face"></div>
+                            <div class="tv__bottom face"></div>
+                        </div>
                     </div>
                 </div>
                 
@@ -1098,6 +1723,10 @@
                     <h4>当前图案</h4>
                     <div class="current-pattern" id="currentPattern">
                         <!-- 图案将通过JS动态生成 -->
+                    </div>
+                    <!-- 拼豆板 -->
+                    <div class="perler-board" id="perlerBoard">
+                        <!-- 拼豆将通过JS动态生成 -->
                     </div>
                 </div>
                 
