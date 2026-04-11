@@ -4,9 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>专注伙伴 - Focus Friend</title>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
     <style>
+        /* 颜色变量 */
+        :root {
+            --bg-1: hsl(250, 28%, 11%);
+            --bg-2: hsl(250, 28%, 5%);
+            --white-1: #FBFAFE;
+            --white-2: #9E99C1;
+            --white-3: #383358;
+            --white-4: #282347;
+            --black-1: #1f2158;
+            --black-2: #1a1c48;
+            --black-3: #161838;
+            --neon-1: hsl(220, 95%, 65%);
+            --neon-2: hsl(210, 68%, 49%);
+            --cuadro-1: #D51E24;
+            --cuadro-2: #0F1110;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -84,24 +100,202 @@
             overflow: hidden;
         }
 
-        /* Three.js 3D房间场景 */
+        /* CSS 3D房间场景 */
         .perler-room {
             width: 100%;
             height: 600px;
-            background: linear-gradient(135deg, #F0F8FF 0%, #E6F7FF 100%);
+            background-image: radial-gradient(circle, var(--bg-1), hsl(250, 28%, 5%));
             border-radius: 20px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
         #scene-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+
+        /* 3D房间基础样式 */
+        .face {
+            position: absolute;
+        }
+
+        .house {
+            position: absolute;
+            width: 28vw;
+            height: 28vw;
+            transform: perspective(90vw) rotateX(75deg) rotateZ(45deg) translateZ(-9vw);
+        }
+
+        .h-shadow {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            box-shadow: 1.5vw -3vw 3vw var(--bg-2), 1.5vw .5vw 1.5vw var(--bg-2);
+        }
+
+        .h-lights {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 45vw;
+            height: 45vw;
+        }
+
+        .h-light {
+            position: absolute;
+        }
+
+        .h-light:nth-of-type(1) {
+            bottom: 5vw;
+            right: 0;
+            width: 14vw;
+            height: 14vw;
+            border-radius: 50%;
+            background-image: radial-gradient(hsl(250, 28%, 13%), transparent);
+            filter: blur(1vw);
+        }
+
+        .h-light:nth-of-type(2) {
+            bottom: 18vw;
+            right: -1vw;
+            width: 2vw;
+            height: 12vw;
+            border-radius: 50%;
+            transform: rotateZ(-50deg);
+            background-image: radial-gradient(rgba(84, 116, 251, 0.45) 50%, rgba(40, 60, 210, 0.45), transparent);
+            box-shadow: -1vw -1vw 2vw 1vw rgba(135, 160, 255, 0.1);
+            filter: blur(1vw);
+        }
+
+        .h-light:nth-of-type(3) {
+            bottom: -2vw;
+            right: 17vw;
+            width: 5vw;
+            height: 12vw;
+            border-radius: 50%;
+            transform: rotateZ(-50deg);
+            background-image: radial-gradient(rgba(84, 116, 251, 0.5) 50%, rgba(40, 60, 210, 0.5), transparent);
+            filter: blur(2vw);
+        }
+
+        .h-light:nth-of-type(3)::before,
+        .h-light:nth-of-type(3)::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            top: -6vw;
+            height: 400%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.1), rgba(84, 116, 251, 0.1), transparent);
+            border-top-left-radius: 10vw;
+            border-top-right-radius: 10vw;
+            filter: blur(1.5vw);
+        }
+
+        .h-light:nth-of-type(3)::before {
+            right: -50%;
+            transform-origin: top right;
+            transform: rotateZ(15deg);
+            box-shadow: -2vw -2vw 0 rgba(84, 116, 251, 0.075);
+        }
+
+        .h-light:nth-of-type(3)::after {
+            left: -50%;
+            transform-origin: top left;
+            transform: rotateZ(-15deg);
+            box-shadow: 2vw -2vw 0 rgba(84, 116, 251, 0.075);
+        }
+
+        .h-light:nth-of-type(4) {
+            bottom: 5vw;
+            left: 8vw;
+            width: 28vw;
+            height: 4vw;
+            transform-origin: top left;
+            transform: skewX(58deg);
+            background-image: linear-gradient(to right, rgba(84, 116, 251, 0.075) 10%, transparent 25%, transparent, rgba(26, 24, 44, 0.15));
+            filter: blur(.25vw);
+        }
+
+        .h-light:nth-of-type(6) {
+            bottom: 14vw;
+            right: 2vw;
+            width: 8vw;
+            height: 16vw;
+            transform-origin: bottom left;
+            transform: skewY(49deg);
+            background-image: linear-gradient(to left, rgba(51, 0, 0, 0.1), rgba(51, 0, 0, 0.7));
+            filter: blur(.35vw);
+        }
+
+        /* 墙壁结构 */
+        .alt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 27vw;
+            height: 27vw;
+        }
+
+        .alt__front {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(26.5vw);
+        }
+
+        .alt__back {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-27vw) translateY(-0.5vw);
+        }
+
+        .alt__right {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(27vw) translateX(-27vw) translateY(-0.5vw);
+        }
+
+        .alt__left {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.5vw);
+        }
+
+        .alt__top {
+            width: 27vw;
+            height: 27vw;
+            background-image: linear-gradient(to bottom, var(--black-3), var(--white-3), var(--white-2));
+            transform-origin: top left;
+            transform: translateZ(0.5vw);
+        }
+
+        .alt__top .light:nth-of-type(1) {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.75), rgba(84, 116, 251, 0.75), transparent);
         }
 
         .room-controls {
@@ -130,321 +324,7 @@
             font-size: 12px;
         }
 
-        .room-control-btn:hover {
-            background: #45a049;
-            transform: translateY(-2px);
-        }
 
-        /* 拼豆图案展示区 */
-        .pattern-display {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 100px;
-            z-index: 100;
-        }
-
-        .pattern-display h4 {
-            font-size: 12px;
-            margin-bottom: 8px;
-            color: #666;
-        }
-
-        .current-pattern {
-            display: grid;
-            grid-template-columns: repeat(5, 8px);
-            grid-template-rows: repeat(5, 8px);
-            gap: 1px;
-        }
-
-        .pattern-bead {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #eee;
-        }
-
-        /* 3D像素风格小土豆角色 */
-        .potato-character {
-            position: absolute;
-            width: 140px;
-            height: 180px;
-            bottom: 120px;
-            left: 30%;
-            transition: all 0.5s ease;
-            z-index: 10;
-            transform-style: preserve-3d;
-            transform: translateZ(0);
-        }
-
-        /* 土豆身体 - 像素风格 */
-        .potato-body {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-            transform: translateZ(10px);
-        }
-
-        /* 像素身体 */
-        .potato-pixel-body {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(45deg, 
-                    #FFD700 0%, #FFD700 25%, 
-                    #FFA500 25%, #FFA500 50%, 
-                    #FFD700 50%, #FFD700 75%, 
-                    #FFA500 75%, #FFA500 100%
-                );
-            background-size: 20px 20px;
-            border: 3px solid #8B4513;
-            border-radius: 50%;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        }
-
-        /* 土豆叶子 */
-        .potato-leaf {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 20px;
-        }
-
-        .leaf {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #4CAF50;
-            border: 2px solid #2E7D32;
-            border-radius: 0 50% 50% 50%;
-        }
-
-        .leaf:nth-child(1) {
-            top: 0;
-            left: 12px;
-            transform: rotate(-30deg);
-        }
-
-        .leaf:nth-child(2) {
-            top: -5px;
-            left: 20px;
-            transform: rotate(30deg);
-        }
-
-        .leaf:nth-child(3) {
-            top: -8px;
-            left: 8px;
-            transform: rotate(-60deg);
-        }
-
-        /* 土豆眼睛 - 像素风格 */
-        .potato-eye {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: #333;
-            top: 40px;
-            border: 2px solid #000;
-        }
-
-        .potato-eye.left { left: 30px; }
-        .potato-eye.right { right: 30px; }
-
-        /* 土豆腮红 - 像素风格 */
-        .potato-blush {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #FF69B4;
-            top: 60px;
-            border: 2px solid #8B0000;
-        }
-
-        .potato-blush.left { left: 25px; }
-        .potato-blush.right { right: 25px; }
-
-        /* 土豆嘴巴 - 像素风格 */
-        .potato-mouth {
-            position: absolute;
-            width: 20px;
-            height: 10px;
-            background: #FF69B4;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 2px solid #8B0000;
-            border-radius: 0 0 50% 50%;
-        }
-
-        /* 土豆手臂 - 像素风格 */
-        .potato-arm {
-            position: absolute;
-            width: 35px;
-            height: 15px;
-            background: linear-gradient(45deg, #FFD700 0%, #FFA500 100%);
-            border: 2px solid #8B4513;
-            top: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        .potato-arm.left {
-            left: -10px;
-            transform: rotate(-45deg);
-        }
-
-        .potato-arm.right {
-            right: -10px;
-            transform: rotate(45deg);
-        }
-
-        /* 土豆手部 - 像素风格 */
-        .potato-hand {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: linear-gradient(45deg, #FFD700 0%, #FFA500 100%);
-            border: 2px solid #8B4513;
-            border-radius: 50%;
-            top: -2px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .potato-arm.left .potato-hand {
-            left: -5px;
-        }
-
-        .potato-arm.right .potato-hand {
-            right: -5px;
-        }
-
-        /* 土豆腿部 - 像素风格 */
-        .potato-leg {
-            position: absolute;
-            width: 30px;
-            height: 40px;
-            background: linear-gradient(180deg, #FFD700 0%, #FF6347 100%);
-            border: 2px solid #8B4513;
-            bottom: -25px;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        .potato-leg.left { left: 30px; }
-        .potato-leg.right { right: 30px; }
-
-        /* 土豆脚部 - 像素风格 */
-        .potato-foot {
-            position: absolute;
-            width: 35px;
-            height: 20px;
-            background: #FF6347;
-            border: 2px solid #8B4513;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* 3D闲置动画 - 小土豆在房间里闲逛 */
-        @keyframes potato-idle {
-            0%, 100% { 
-                left: 20%; 
-                transform: translateZ(50px) scaleX(1);
-            }
-            25% { 
-                left: 50%; 
-                transform: translateZ(0) scaleX(1);
-            }
-            50% { 
-                left: 80%; 
-                transform: translateZ(-50px) scaleX(1);
-            }
-            75% { 
-                left: 50%; 
-                transform: translateZ(0) scaleX(-1);
-            }
-        }
-
-        @keyframes potato-bounce {
-            0%, 100% { transform: translateY(0) scaleX(var(--scale-x, 1)); }
-            50% { transform: translateY(-12px) scaleX(var(--scale-x, 1)); }
-        }
-
-        .potato-character.idle {
-            animation: potato-idle 8s infinite ease-in-out;
-        }
-
-        .potato-character.idle .potato-body {
-            animation: potato-bounce 1s infinite ease-in-out;
-        }
-
-        /* 3D专注状态 - 小土豆在工作台前拼豆 */
-        .potato-character.focusing {
-            left: 50% !important;
-            bottom: 180px !important;
-            transform: translateX(-50%) translateZ(100px) !important;
-            animation: none;
-        }
-
-        .potato-character.focusing .potato-arm.left {
-            transform: rotate(-75deg) translateY(-25px);
-        }
-
-        .potato-character.focusing .potato-arm.right {
-            transform: rotate(75deg) translateY(-25px);
-        }
-
-        /* 拼豆动画 */
-        @keyframes beading {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .potato-character.focusing .potato-arm {
-            animation: beading 0.5s infinite ease-in-out;
-        }
-
-        /* 拼豆图案展示区 */
-        .pattern-display {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: white;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            min-width: 100px;
-        }
-
-        .pattern-display h4 {
-            font-size: 12px;
-            margin-bottom: 8px;
-            color: #666;
-        }
-
-        .current-pattern {
-            display: grid;
-            grid-template-columns: repeat(5, 8px);
-            grid-template-rows: repeat(5, 8px);
-            gap: 1px;
-        }
-
-        .pattern-bead {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #eee;
-        }
 
         /* 角色状态 */
         .character-status {
@@ -1119,7 +999,93 @@
             <!-- 拼豆房间场景 -->
             <div class="perler-room" id="perlerRoom">
                 <!-- Three.js 3D场景容器 -->
-                <div id="scene-container"></div>
+                <div id="scene-container">
+                    <!-- 3D 房间 -->
+                    <div class="house">
+                        <!-- 光照效果 -->
+                        <div class="h-lights">
+                            <div class="h-light"></div>
+                            <div class="h-light"></div>
+                            <div class="h-light"></div>
+                            <div class="h-light"></div>
+                            <div class="h-light"></div>
+                            <div class="h-light"></div>
+                        </div>
+
+                        <!-- 阴影效果 -->
+                        <div class="h-shadow"></div>
+
+                        <!-- 墙壁结构 -->
+                        <div class="alt">
+                            <div class="alt__front face"></div>
+                            <div class="alt__back face"></div>
+                            <div class="alt__right face"></div>
+                            <div class="alt__left face"></div>
+                            <div class="alt__top face">
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                                <div class="light"></div>
+                            </div>
+                            <div class="alt__bottom face"></div>
+                        </div>
+
+                        <div class="alb">
+                            <div class="alb__front face"></div>
+                            <div class="alb__back face"></div>
+                            <div class="alb__right face"></div>
+                            <div class="alb__left face"></div>
+                            <div class="alb__top face"></div>
+                            <div class="alb__bottom face"></div>
+                        </div>
+
+                        <div class="arb">
+                            <div class="arb__front face"></div>
+                            <div class="arb__back face"></div>
+                            <div class="arb__right face"></div>
+                            <div class="arb__left face"></div>
+                            <div class="arb__top face"></div>
+                            <div class="arb__bottom face"></div>
+                        </div>
+
+                        <div class="blt">
+                            <div class="blt__front face"></div>
+                            <div class="blt__back face"></div>
+                            <div class="blt__right face"></div>
+                            <div class="blt__left face"></div>
+                            <div class="blt__bottom face"></div>
+                        </div>
+
+                        <div class="blt2">
+                            <div class="blt2__front face"></div>
+                            <div class="blt2__back face"></div>
+                            <div class="blt2__right face"></div>
+                            <div class="blt2__left face"></div>
+                            <div class="blt2__top face"></div>
+                            <div class="blt2__bottom face"></div>
+                        </div>
+
+                        <div class="blb">
+                            <div class="blb__front face"></div>
+                            <div class="blb__back face"></div>
+                            <div class="blb__right face"></div>
+                            <div class="blb__bottom face"></div>
+                        </div>
+
+                        <div class="blb2">
+                            <div class="blb2__front face"></div>
+                            <div class="blb2__back face"></div>
+                            <div class="blb2__right face"></div>
+                            <div class="blb2__left face"></div>
+                            <div class="blb2__top face"></div>
+                            <div class="blb2__bottom face"></div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- 房间控制按钮 -->
                 <div class="room-controls">
@@ -1339,431 +1305,6 @@
     </div>
 
     <script>
-        // Three.js 3D房间初始化
-        let scene, camera, renderer, controls;
-        let doorGroup, doorOpen = false;
-        
-        function initThreeJS() {
-            // 场景
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f8ff);
-
-            // 相机
-            camera = new THREE.PerspectiveCamera(75, document.querySelector('.perler-room').offsetWidth / document.querySelector('.perler-room').offsetHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5);
-
-            // 渲染器
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(document.querySelector('.perler-room').offsetWidth, document.querySelector('.perler-room').offsetHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            document.getElementById('scene-container').appendChild(renderer.domElement);
-
-            // 控制器
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.minDistance = 2;
-            controls.maxDistance = 15;
-            controls.minPolarAngle = 0;
-            controls.maxPolarAngle = Math.PI / 2;
-
-            // 光照
-            // 环境光
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-
-            // 方向光（主光源）
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(5, 10, 7);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            directionalLight.shadow.camera.near = 0.5;
-            directionalLight.shadow.camera.far = 50;
-            directionalLight.shadow.camera.left = -10;
-            directionalLight.shadow.camera.right = 10;
-            directionalLight.shadow.camera.top = 10;
-            directionalLight.shadow.camera.bottom = -10;
-            scene.add(directionalLight);
-
-            // 补光点光源
-            const pointLight1 = new THREE.PointLight(0xffcc80, 0.4);
-            pointLight1.position.set(-3, 2, -3);
-            scene.add(pointLight1);
-
-            const pointLight2 = new THREE.PointLight(0xffcc80, 0.4);
-            pointLight2.position.set(3, 2, 3);
-            scene.add(pointLight2);
-
-            // 房间尺寸
-            const roomSize = 8;
-            const wallHeight = 4;
-
-            // 材质
-            const wallMaterial = new THREE.MeshStandardMaterial({
-                color: 0xfff3f3,
-                roughness: 0.8,
-                metalness: 0.1
-            });
-
-            const floorMaterial = new THREE.MeshStandardMaterial({
-                color: 0xa0522d,
-                roughness: 0.9,
-                metalness: 0.1,
-                map: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_COLOR.jpg'),
-                normalMap: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_NRM.jpg'),
-                aoMap: new THREE.TextureLoader().load('https://threejs.org/examples/textures/wood/Wood_Plywood_002_OCC.jpg')
-            });
-
-            // 地板
-            const floorGeometry = new THREE.PlaneGeometry(roomSize, roomSize);
-            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-            floor.rotation.x = -Math.PI / 2;
-            floor.position.y = 0;
-            floor.receiveShadow = true;
-            scene.add(floor);
-
-            // 墙壁
-            // 后墙
-            const backWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
-            const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
-            backWall.position.set(0, wallHeight / 2, -roomSize / 2);
-            backWall.receiveShadow = true;
-            scene.add(backWall);
-
-            // 左墙
-            const leftWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
-            const leftWall = new THREE.Mesh(leftWallGeometry, wallMaterial);
-            leftWall.position.set(-roomSize / 2, wallHeight / 2, 0);
-            leftWall.rotation.y = Math.PI / 2;
-            leftWall.receiveShadow = true;
-            scene.add(leftWall);
-
-            // 右墙
-            const rightWallGeometry = new THREE.PlaneGeometry(roomSize, wallHeight);
-            const rightWall = new THREE.Mesh(rightWallGeometry, wallMaterial);
-            rightWall.position.set(roomSize / 2, wallHeight / 2, 0);
-            rightWall.rotation.y = -Math.PI / 2;
-            rightWall.receiveShadow = true;
-            scene.add(rightWall);
-
-            // 天花板
-            const ceilingGeometry = new THREE.PlaneGeometry(roomSize, roomSize);
-            const ceilingMaterial = new THREE.MeshStandardMaterial({
-                color: 0xf8f9fa,
-                roughness: 0.8,
-                metalness: 0.1
-            });
-            const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-            ceiling.rotation.x = Math.PI / 2;
-            ceiling.position.y = wallHeight;
-            scene.add(ceiling);
-
-            // 门
-            doorGroup = new THREE.Group();
-            scene.add(doorGroup);
-
-            const doorGeometry = new THREE.PlaneGeometry(2, 2.5);
-            const doorMaterial = new THREE.MeshStandardMaterial({
-                color: 0x8b4513,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-            const door = new THREE.Mesh(doorGeometry, doorMaterial);
-            door.position.set(roomSize / 2, 1.25, 0);
-            door.rotation.y = -Math.PI / 2;
-            door.castShadow = true;
-            doorGroup.add(door);
-
-            // 门把手
-            const doorknobGeometry = new THREE.SphereGeometry(0.08, 16, 16);
-            const doorknobMaterial = new THREE.MeshStandardMaterial({
-                color: 0xc0c0c0,
-                roughness: 0.5,
-                metalness: 0.8
-            });
-            const doorknob = new THREE.Mesh(doorknobGeometry, doorknobMaterial);
-            doorknob.position.set(-0.8, 1.25, 0.01);
-            doorknob.castShadow = true;
-            door.add(doorknob);
-
-            // 家具
-            // 桌子
-            const tableGroup = new THREE.Group();
-            tableGroup.position.set(-1, 0.5, -1);
-            scene.add(tableGroup);
-
-            // 桌子腿
-            const tableLegGeometry = new THREE.BoxGeometry(0.1, 0.5, 0.1);
-            const tableLegMaterial = new THREE.MeshStandardMaterial({
-                color: 0x8b4513,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-
-            for (let i = 0; i < 4; i++) {
-                const leg = new THREE.Mesh(tableLegGeometry, tableLegMaterial);
-                leg.position.set(
-                    (i % 2) * 0.8 - 0.4,
-                    -0.25,
-                    Math.floor(i / 2) * 0.8 - 0.4
-                );
-                leg.castShadow = true;
-                tableGroup.add(leg);
-            }
-
-            // 桌面
-            const tableTopGeometry = new THREE.BoxGeometry(1, 0.1, 1);
-            const tableTopMaterial = new THREE.MeshStandardMaterial({
-                color: 0xa0522d,
-                roughness: 0.8,
-                metalness: 0.2
-            });
-            const tableTop = new THREE.Mesh(tableTopGeometry, tableTopMaterial);
-            tableTop.castShadow = true;
-            tableTop.receiveShadow = true;
-            tableGroup.add(tableTop);
-
-            // 椅子
-            const chairGroup = new THREE.Group();
-            chairGroup.position.set(-1, 0.35, -2.5);
-            scene.add(chairGroup);
-
-            // 椅子腿
-            for (let i = 0; i < 4; i++) {
-                const leg = new THREE.Mesh(tableLegGeometry, tableLegMaterial);
-                leg.scale.set(0.8, 0.8, 0.8);
-                leg.position.set(
-                    (i % 2) * 0.4 - 0.2,
-                    -0.2,
-                    Math.floor(i / 2) * 0.4 - 0.2
-                );
-                leg.castShadow = true;
-                chairGroup.add(leg);
-            }
-
-            // 椅子座
-            const chairSeatGeometry = new THREE.BoxGeometry(0.5, 0.05, 0.5);
-            const chairSeat = new THREE.Mesh(chairSeatGeometry, tableTopMaterial);
-            chairSeat.castShadow = true;
-            chairSeat.receiveShadow = true;
-            chairGroup.add(chairSeat);
-
-            // 椅子背
-            const chairBackGeometry = new THREE.BoxGeometry(0.5, 0.4, 0.05);
-            const chairBack = new THREE.Mesh(chairBackGeometry, tableTopMaterial);
-            chairBack.position.set(0, 0.2, -0.225);
-            chairBack.castShadow = true;
-            chairGroup.add(chairBack);
-
-            // 地毯
-            const carpetGeometry = new THREE.PlaneGeometry(4, 3);
-            const carpetMaterial = new THREE.MeshStandardMaterial({
-                color: 0xffb6c1,
-                roughness: 0.9,
-                metalness: 0.05
-            });
-            const carpet = new THREE.Mesh(carpetGeometry, carpetMaterial);
-            carpet.rotation.x = -Math.PI / 2;
-            carpet.position.set(0, 0.01, 0);
-            carpet.receiveShadow = true;
-            scene.add(carpet);
-
-            // 墙上的画
-            const paintingGeometry = new THREE.PlaneGeometry(1.5, 1);
-            const paintingMaterial = new THREE.MeshStandardMaterial({
-                color: 0xdeb887,
-                roughness: 0.8,
-                metalness: 0.1,
-                map: new THREE.TextureLoader().load('https://source.unsplash.com/random/400x300')
-            });
-            const painting = new THREE.Mesh(paintingGeometry, paintingMaterial);
-            painting.position.set(0, wallHeight / 2 + 0.5, -roomSize / 2 + 0.01);
-            painting.castShadow = true;
-            scene.add(painting);
-
-            // 窗户
-            const windowGeometry = new THREE.PlaneGeometry(2, 1.5);
-            const windowMaterial = new THREE.MeshStandardMaterial({
-                color: 0x87ceeb,
-                roughness: 0.3,
-                metalness: 0.1,
-                transparent: true,
-                opacity: 0.8
-            });
-            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
-            windowMesh.position.set(roomSize / 2 - 1, wallHeight / 2, 0);
-            windowMesh.rotation.y = -Math.PI / 2;
-            windowMesh.receiveShadow = true;
-            scene.add(windowMesh);
-
-            // 小土豆角色
-            createPotatoCharacter();
-
-            // 动画循环
-            animate();
-
-            // 窗口大小调整
-            window.addEventListener('resize', onWindowResize);
-        }
-
-        // 创建小土豆角色
-        function createPotatoCharacter() {
-            const potatoGroup = new THREE.Group();
-            potatoGroup.position.set(0, 0.8, -2);
-            scene.add(potatoGroup);
-
-            // 土豆身体
-            const bodyGeometry = new THREE.SphereGeometry(0.4, 32, 32);
-            const bodyMaterial = new THREE.MeshStandardMaterial({
-                color: 0xffd700,
-                roughness: 0.8,
-                metalness: 0.1
-            });
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.castShadow = true;
-            potatoGroup.add(body);
-
-            // 土豆叶子
-            const leafGeometry = new THREE.ConeGeometry(0.1, 0.3, 8);
-            const leafMaterial = new THREE.MeshStandardMaterial({ color: 0x4caf50 });
-            
-            const leaf1 = new THREE.Mesh(leafGeometry, leafMaterial);
-            leaf1.position.set(0.1, 0.4, 0);
-            leaf1.rotation.z = Math.PI / 6;
-            potatoGroup.add(leaf1);
-
-            const leaf2 = new THREE.Mesh(leafGeometry, leafMaterial);
-            leaf2.position.set(-0.1, 0.4, 0);
-            leaf2.rotation.z = -Math.PI / 6;
-            potatoGroup.add(leaf2);
-
-            // 眼睛
-            const eyeGeometry = new THREE.SphereGeometry(0.05, 16, 16);
-            const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
-            
-            const eyeL = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            eyeL.position.set(0.15, 0.1, 0.35);
-            potatoGroup.add(eyeL);
-
-            const eyeR = new THREE.Mesh(eyeGeometry, eyeMaterial);
-            eyeR.position.set(-0.15, 0.1, 0.35);
-            potatoGroup.add(eyeR);
-
-            // 嘴巴
-            const mouthGeometry = new THREE.CircleGeometry(0.1, 16, Math.PI, Math.PI);
-            const mouthMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4 });
-            const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
-            mouth.position.set(0, -0.1, 0.38);
-            mouth.rotation.x = -Math.PI / 2;
-            potatoGroup.add(mouth);
-
-            // 手臂
-            const armGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 8);
-            const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-            
-            const armL = new THREE.Mesh(armGeometry, armMaterial);
-            armL.position.set(0.25, -0.1, 0);
-            armL.rotation.z = -Math.PI / 4;
-            potatoGroup.add(armL);
-
-            const armR = new THREE.Mesh(armGeometry, armMaterial);
-            armR.position.set(-0.25, -0.1, 0);
-            armR.rotation.z = Math.PI / 4;
-            potatoGroup.add(armR);
-
-            // 腿部
-            const legGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.4, 8);
-            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-            
-            const legL = new THREE.Mesh(legGeometry, legMaterial);
-            legL.position.set(0.15, -0.5, 0);
-            potatoGroup.add(legL);
-
-            const legR = new THREE.Mesh(legGeometry, legMaterial);
-            legR.position.set(-0.15, -0.5, 0);
-            potatoGroup.add(legR);
-        }
-
-        // 动画循环
-        function animate() {
-            requestAnimationFrame(animate);
-            if (controls) controls.update();
-            if (renderer && scene && camera) renderer.render(scene, camera);
-        }
-
-        // 窗口大小调整
-        function onWindowResize() {
-            if (camera && renderer) {
-                const roomElement = document.querySelector('.perler-room');
-                camera.aspect = roomElement.offsetWidth / roomElement.offsetHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(roomElement.offsetWidth, roomElement.offsetHeight);
-            }
-        }
-
-        // 开关门函数
-        function toggleDoor() {
-            if (!doorGroup) return;
-            
-            doorOpen = !doorOpen;
-            const targetAngle = doorOpen ? Math.PI / 2 : 0;
-            
-            // 平滑动画
-            let currentAngle = doorGroup.rotation.y;
-            const angleDiff = targetAngle - currentAngle;
-            const duration = 1000;
-            const startTime = Date.now();
-
-            function animateDoor() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeProgress = 1 - Math.pow(1 - progress, 3);
-                
-                doorGroup.rotation.y = currentAngle + angleDiff * easeProgress;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(animateDoor);
-                }
-            }
-
-            animateDoor();
-        }
-
-        // 重置视角
-        function resetView() {
-            if (camera && controls) {
-                camera.position.set(0, 2, 5);
-                controls.target.set(0, 1, 0);
-                controls.update();
-            }
-        }
-
-        // 初始化Three.js
-        window.addEventListener('DOMContentLoaded', initThreeJS);
-
-        // 事件监听器
-        window.addEventListener('DOMContentLoaded', function() {
-            // 开关门按钮
-            const toggleDoorBtn = document.getElementById('toggleDoorBtn');
-            if (toggleDoorBtn) {
-                toggleDoorBtn.addEventListener('click', toggleDoor);
-            }
-
-            // 重置视角按钮
-            const resetViewBtn = document.getElementById('resetViewBtn');
-            if (resetViewBtn) {
-                resetViewBtn.addEventListener('click', resetView);
-            }
-
-            // 键盘事件
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    toggleDoor();
-                }
-            });
-        });
 
         // 数据存储
         const storage = {
