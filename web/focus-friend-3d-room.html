@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注伙伴 - 3D房间</title>
+    <style>
+        /* 颜色变量 */
+        :root {
+            --bg-1: hsl(250, 28%, 11%);
+            --bg-2: hsl(250, 28%, 5%);
+            --white-1: #FBFAFE;
+            --white-2: #9E99C1;
+            --white-3: #383358;
+            --white-4: #282347;
+            --black-1: #1f2158;
+            --black-2: #1a1c48;
+            --black-3: #161838;
+            --neon-1: hsl(220, 95%, 65%);
+            --neon-2: hsl(210, 68%, 49%);
+            --cuadro-1: #D51E24;
+            --cuadro-2: #0F1110;
+            --cuadro-3: #0F1120;
+
+        }
+
+        /* 全局样式 */
+        *,
+        *::after,
+        *::before {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            transform-style: preserve-3d;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+            background-image: radial-gradient(circle, var(--bg-1), hsl(250, 28%, 5%));
+        }
+
+        .face {
+            position: absolute;
+        }
+
+        /* 3D 房间基础样式 */
+        .house {
+            position: absolute;
+            width: 28vw;
+            height: 28vw;
+            transform: perspective(90vw) rotateX(75deg) rotateZ(45deg) translateZ(-9vw);
+        }
+
+        .h-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: 1.5vw -3vw 3vw var(--bg-2), 1.5vw .5vw 1.5vw var(--bg-2);
+        }
+
+        .h-lights {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 45vw;
+            height: 45vw;
+        }
+
+        .h-light {
+            position: absolute;
+        }
+
+        .h-light:nth-of-type(1) {
+            bottom: 5vw;
+            right: 0;
+            width: 14vw;
+            height: 14vw;
+            border-radius: 50%;
+            background-image: radial-gradient(hsl(250, 28%, 13%), transparent);
+            filter: blur(1vw);
+        }
+
+        .h-light:nth-of-type(2) {
+            bottom: 18vw;
+            right: -1vw;
+            width: 2vw;
+            height: 12vw;
+            border-radius: 50%;
+            transform: rotateZ(-50deg);
+            background-image: radial-gradient(rgba(84, 116, 251, 0.45) 50%, rgba(40, 60, 210, 0.45), transparent);
+            box-shadow: -1vw -1vw 2vw 1vw rgba(135, 160, 255, 0.1);
+            filter: blur(1vw);
+        }
+
+        .h-light:nth-of-type(3) {
+            bottom: -2vw;
+            right: 17vw;
+            width: 5vw;
+            height: 12vw;
+            border-radius: 50%;
+            transform: rotateZ(-50deg);
+            background-image: radial-gradient(rgba(84, 116, 251, 0.5) 50%, rgba(40, 60, 210, 0.5), transparent);
+            filter: blur(2vw);
+        }
+
+        .h-light:nth-of-type(3)::before,
+        .h-light:nth-of-type(3)::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            top: -6vw;
+            height: 400%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.1), rgba(84, 116, 251, 0.1), transparent);
+            border-top-left-radius: 10vw;
+            border-top-right-radius: 10vw;
+            filter: blur(1.5vw);
+        }
+
+        .h-light:nth-of-type(3)::before {
+            right: -50%;
+            transform-origin: top right;
+            transform: rotateZ(15deg);
+            box-shadow: -2vw -2vw 0 rgba(84, 116, 251, 0.075);
+        }
+
+        .h-light:nth-of-type(3)::after {
+            left: -50%;
+            transform-origin: top left;
+            transform: rotateZ(-15deg);
+            box-shadow: 2vw -2vw 0 rgba(84, 116, 251, 0.075);
+        }
+
+        .h-light:nth-of-type(4) {
+            bottom: 5vw;
+            left: 8vw;
+            width: 28vw;
+            height: 4vw;
+            transform-origin: top left;
+            transform: skewX(58deg);
+            background-image: linear-gradient(to right, rgba(84, 116, 251, 0.075) 10%, transparent 25%, transparent, rgba(26, 24, 44, 0.15));
+            filter: blur(.25vw);
+        }
+
+        .h-light:nth-of-type(6) {
+            bottom: 14vw;
+            right: 2vw;
+            width: 8vw;
+            height: 16vw;
+            transform-origin: bottom left;
+            transform: skewY(49deg);
+            background-image: linear-gradient(to left, rgba(51, 0, 0, 0.1), rgba(51, 0, 0, 0.7));
+            filter: blur(.35vw);
+        }
+
+        /* 墙壁结构 */
+        .alt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 27vw;
+            height: 27vw;
+        }
+
+        .alt__front {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.5vw - (13.5vw * 2)));
+        }
+
+        .alt__back {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-27vw) translateY(-0.5vw);
+        }
+
+        .alt__right {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(27vw) translateX(-27vw) translateY(-0.5vw);
+        }
+
+        .alt__left {
+            width: 27vw;
+            height: 0.5vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.5vw);
+        }
+
+        .alt__top {
+            width: 27vw;
+            height: 27vw;
+            background-image: linear-gradient(to bottom, var(--black-3), var(--white-3), var(--white-2));
+            transform-origin: top left;
+            transform: translateZ(0.5vw);
+        }
+
+        .alt__top .light:nth-of-type(1) {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.75), rgba(84, 116, 251, 0.75), transparent);
+        }
+
+        .alt__top .light:nth-of-type(2) {
+            position: absolute;
+            left: 4vw;
+            height: 100%;
+            width: 6vw;
+            background-image: linear-gradient(to bottom, transparent 20%, rgba(40, 60, 210, 0.75), rgba(84, 116, 251, 0.25) 80%);
+            filter: blur(.1vw);
+        }
+
+        .alt__top .light:nth-of-type(3) {
+            position: absolute;
+            bottom: 10vw;
+            left: 5vw;
+            width: 6vw;
+            height: 3vw;
+            border-radius: 50%;
+            transform: rotateZ(42deg);
+            background-image: radial-gradient(rgba(135, 160, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.55vw);
+        }
+
+        .alt__top .light:nth-of-type(4) {
+            position: absolute;
+            bottom: 7vw;
+            left: 4vw;
+            width: 8.5vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(135, 160, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.55vw);
+        }
+
+        .alt__top .light:nth-of-type(5) {
+            position: absolute;
+            bottom: 3.5vw;
+            left: 4.5vw;
+            width: 6vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(147, 170, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.75vw);
+        }
+
+        .alt__top .light:nth-of-type(6) {
+            position: absolute;
+            bottom: 3vw;
+            left: .5vw;
+            width: 4vw;
+            height: 2vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(147, 170, 255, 0.75) 50%, rgba(40, 60, 210, 0.75));
+            filter: blur(.35vw);
+        }
+
+        .alt__top .light:nth-of-type(7) {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, #0f111e, var(--neon-1) 10%, transparent 20%);
+        }
+
+        .alt__top .light:nth-of-type(7)::before {
+            content: '';
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.6), transparent 60%);
+        }
+
+        .alt__top .light:nth-of-type(7)::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.5), transparent 60%);
+        }
+
+        .alt__top .light:nth-of-type(8) {
+            position: absolute;
+            bottom: 5vw;
+            left: 10vw;
+            width: 6vw;
+            height: 4vw;
+            border-radius: 50%;
+            transform: rotateZ(40deg);
+            background-image: radial-gradient(rgba(251, 250, 254, 0.1) 50%, rgba(158, 153, 193, 0.1));
+            filter: blur(.8vw);
+        }
+
+        .alt__bottom {
+            width: 27vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-27vw);
+        }
+
+        /* 地板 */
+        .alb {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 27vw;
+            height: 1vw;
+        }
+
+        .alb__front {
+            width: 27vw;
+            height: 2vw;
+            background-image: linear-gradient(to right, var(--white-2) 40%, #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(2vw - (0.5vw * 2)));
+        }
+
+        .alb__back {
+            width: 27vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-27vw) translateY(-2vw);
+        }
+
+        .alb__right {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(27vw) translateX(-1vw) translateY(-2vw);
+        }
+
+        .alb__left {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-2vw);
+        }
+
+        .alb__top {
+            width: 27vw;
+            height: 1vw;
+            background-image: linear-gradient(to right, var(--white-1) 40%, #E6E5F0);
+            transform-origin: top left;
+            transform: translateZ(2vw);
+        }
+
+        .alb__bottom {
+            width: 27vw;
+            height: 1vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-27vw);
+        }
+
+        /* 右侧墙壁 */
+        .arb {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 1vw;
+            height: 28vw;
+        }
+
+        .arb__front {
+            width: 1vw;
+            height: 2vw;
+            background-color: #8A85B1;
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(2vw - (14vw * 2)));
+        }
+
+        .arb__back {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-2vw);
+        }
+
+        .arb__right {
+            width: 28vw;
+            height: 2vw;
+            background-image: linear-gradient(to right, var(--white-4) 40%, #1a182c);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-28vw) translateY(-2vw);
+        }
+
+        .arb__left {
+            width: 28vw;
+            height: 2vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-2vw);
+        }
+
+        .arb__top {
+            width: 1vw;
+            height: 28vw;
+            background-image: linear-gradient(to top, var(--white-1), #322e4a 25%, #1a182c 75%, var(--white-2));
+            transform-origin: top left;
+            transform: translateZ(2vw);
+        }
+
+        .arb__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 30%;
+            top: 0;
+            background-image: linear-gradient(to bottom, transparent, rgba(84, 116, 251, 0.85), transparent);
+        }
+
+        .arb__bottom {
+            width: 1vw;
+            height: 28vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        /* 左侧墙壁 */
+        .blt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1vw;
+            height: 27vw;
+            transform: translateZ(.5vw);
+        }
+
+        .blt__front {
+            width: 1vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, var(--white-3), var(--white-2));
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(20vw - (13.5vw * 2)));
+        }
+
+        .blt__back {
+            width: 1vw;
+            height: 20vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-20vw);
+        }
+
+        .blt__right {
+            width: 27vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #1a182c, var(--white-3), var(--white-3) 90%, #1c193a);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-27vw) translateY(-20vw);
+        }
+
+        .blt__right::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: .75vw;
+            background-image: linear-gradient(to bottom, #8A85B1, var(--neon-2));
+            border-top: .1vw solid var(--white-4);
+            border-bottom: .1vw solid var(--white-4);
+        }
+
+        .blt__right::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.35), transparent 30%, transparent 70%, rgba(40, 60, 210, 0.35));
+        }
+
+        .blt__left {
+            width: 27vw;
+            height: 20vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-20vw);
+        }
+
+        .blt__bottom {
+            width: 1vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        /* 左侧墙壁装饰 */
+        .blt2 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2vw;
+            height: 27vw;
+            transform: translateZ(20.5vw);
+        }
+
+        .blt2__front {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.75vw - (13.5vw * 2)));
+        }
+
+        .blt2__back {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-2vw) translateY(-0.75vw);
+        }
+
+        .blt2__right {
+            width: 27vw;
+            height: 0.75vw;
+            background-image: linear-gradient(to right, #8A85B1, var(--white-2), #7A75A1);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(2vw) translateX(-27vw) translateY(-0.75vw);
+        }
+
+        .blt2__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            border-bottom: .1vw solid rgba(251, 250, 254, 0.75);
+            background-image: linear-gradient(to top, rgba(84, 116, 251, 0.35), transparent);
+        }
+
+        .blt2__left {
+            width: 27vw;
+            height: 0.75vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.75vw);
+        }
+
+        .blt2__top {
+            width: 2vw;
+            height: 27vw;
+            background-image: linear-gradient(to top, var(--white-2), var(--white-1));
+            transform-origin: top left;
+            transform: translateZ(0.75vw);
+        }
+
+        .blt2__bottom {
+            width: 2vw;
+            height: 27vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-2vw);
+        }
+
+        /* 后墙 */
+        .blb {
+            position: absolute;
+            left: 1vw;
+            top: 0;
+            width: 26vw;
+            height: 1vw;
+            transform: translateZ(.5vw);
+        }
+
+        .blb__front {
+            width: 26vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #5A557B, #6A658B 20%, #5A557B);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(20vw - (0.5vw * 2)));
+        }
+
+        .blb__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.25), transparent 20%, transparent 80%, rgba(40, 60, 210, 0.5)),
+                            linear-gradient(to right, rgba(31, 33, 88, 0.35), transparent),
+                            linear-gradient(to bottom, rgba(31, 33, 88, 0.35), transparent),
+                            linear-gradient(to bottom, rgba(10, 20, 100, 0.5), transparent 20%, transparent 80%, rgba(40, 60, 210, 0.25));
+        }
+
+        .blb__front::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: .75vw;
+            background-image: linear-gradient(to bottom, #8A85B1, var(--neon-2));
+            border-top: .1vw solid var(--white-4);
+            border-bottom: .1vw solid var(--white-4);
+        }
+
+        .blb__back {
+            width: 26vw;
+            height: 20vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-26vw) translateY(-20vw);
+        }
+
+        .blb__right {
+            width: 1vw;
+            height: 20vw;
+            background-image: linear-gradient(to bottom, #1a182c, #161426 80%, #1a182c);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(26vw) translateX(-1vw) translateY(-20vw);
+        }
+
+        .blb__bottom {
+            width: 26vw;
+            height: 1vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-26vw);
+        }
+
+        /* 后墙装饰 */
+        .blb2 {
+            position: absolute;
+            left: 2vw;
+            top: 0;
+            width: 25vw;
+            height: 1vw;
+            transform: translateZ(20.5vw);
+        }
+
+        .blb2__front {
+            width: 25vw;
+            height: 0.75vw;
+            background-image: linear-gradient(to right, #7A75A1, var(--white-2), #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.75vw - (1vw * 2)));
+        }
+
+        .blb2__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            border-bottom: .1vw solid rgba(251, 250, 254, 0.75);
+            background-image: linear-gradient(to top, rgba(40, 60, 210, 0.25), transparent);
+        }
+
+        .blb2__back {
+            width: 25vw;
+            height: 0.75vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-25vw) translateY(-0.75vw);
+        }
+
+        .blb2__right {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: #1a182c;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(25vw) translateX(-2vw) translateY(-0.75vw);
+        }
+
+        .blb2__left {
+            width: 2vw;
+            height: 0.75vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.75vw);
+        }
+
+        .blb2__top {
+            width: 25vw;
+            height: 2vw;
+            background-image: linear-gradient(to left, var(--white-2), var(--white-1));
+            transform-origin: top left;
+            transform: translateZ(0.75vw);
+        }
+
+        .blb2__bottom {
+            width: 25vw;
+            height: 2vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-25vw);
+        }
+
+        /* 扬声器 */
+        .bocina-l,
+        .bocina-r {
+            position: absolute;
+            left: 1.5vw;
+            bottom: 5.25vw;
+            width: .75vw;
+            height: 1.5vw;
+            transform: translateZ(8vw);
+        }
+
+        .bocina-l__right,
+        .bocina-r__right {
+            width: 1.5vw;
+            height: 6vw;
+            background-image: radial-gradient(#0f111e, #0a0c19);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.75vw) translateX(-1.5vw) translateY(-6vw);
+        }
+
+        .bocina-l__top,
+        .bocina-r__top {
+            width: 0.75vw;
+            height: 1.5vw;
+            background-image: linear-gradient(to left, #E6E5F0, var(--white-2), #7A75A1);
+            transform-origin: top left;
+            transform: translateZ(6vw);
+        }
+
+        .bocina-l__bottom,
+        .bocina-r__bottom {
+            width: 0.75vw;
+            height: 1.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.75vw);
+        }
+
+        .bocina-l__front {
+            width: 0.75vw;
+            height: 6vw;
+            background-image: linear-gradient(to right, var(--neon-1), #6A658B 30%, #E6E5F0);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(6vw - (0.75vw * 2)));
+        }
+
+        .bocina-l__back {
+            width: 0.75vw;
+            height: 6vw;
+            background-image: linear-gradient(to right, var(--white-3), #282347);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.75vw) translateY(-6vw);
+        }
+
+        .bocina-l__back::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(84, 116, 251, 0.35) 65%, rgba(84, 116, 251, 0.95));
+        }
+
+        .bocina-l__left {
+            width: 1.5vw;
+            height: 6vw;
+            background-color: var(--white-4);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-6vw);
+        }
+
+        .bocina-l__left::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: 20%;
+            width: 120%;
+            height: 120%;
+            background-image: linear-gradient(to left, rgba(10, 20, 100, 0.75), rgba(15, 17, 30, 0.75));
+            filter: blur(.5vw);
+        }
+
+        .bocina-r {
+            top: 5.25vw;
+        }
+
+        .bocina-r__front {
+            width: 0.75vw;
+            height: 6vw;
+            background-image: linear-gradient(to right, var(--white-3), #282347);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(6vw - (0.75vw * 2)));
+        }
+
+        .bocina-r__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to left, rgba(84, 116, 251, 0.35) 65%, rgba(84, 116, 251, 0.95));
+        }
+
+        .bocina-r__back {
+            width: 0.75vw;
+            height: 6vw;
+            background-image: linear-gradient(to right, #6A658B, #E6E5F0);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.75vw) translateY(-6vw);
+        }
+
+        .bocina-r__left {
+            width: 1.5vw;
+            height: 6vw;
+            background-color: var(--white-4);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-6vw);
+        }
+
+        .bocina-r__left::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -20%;
+            width: 120%;
+            height: 120%;
+            background-image: linear-gradient(to right, rgba(10, 20, 100, 0.75), rgba(15, 17, 30, 0.75));
+            filter: blur(.5vw);
+        }
+
+        /* 搁板 */
+        .repisa-t,
+        .repisa-b {
+            position: absolute;
+            left: 1.5vw;
+            top: 9vw;
+            width: 1.5vw;
+            height: 10vw;
+            transform: translateZ(16vw);
+        }
+
+        .repisa-t__front,
+        .repisa-b__front {
+            width: 1.5vw;
+            height: 0.25vw;
+            background-color: var(--white-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.25vw - (5vw * 2)));
+        }
+
+        .repisa-t__back,
+        .repisa-b__back {
+            width: 1.5vw;
+            height: 0.25vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1.5vw) translateY(-0.25vw);
+        }
+
+        .repisa-t__right,
+        .repisa-b__right {
+            width: 10vw;
+            height: 0.25vw;
+            background-color: #8A85B1;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1.5vw) translateX(-10vw) translateY(-0.25vw);
+        }
+
+        .repisa-t__left,
+        .repisa-b__left {
+            width: 10vw;
+            height: 0.25vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.25vw);
+        }
+
+        .repisa-t__top,
+        .repisa-b__top {
+            width: 1.5vw;
+            height: 10vw;
+            background-color: #E6E5F0;
+            transform-origin: top left;
+            transform: translateZ(0.25vw);
+        }
+
+        .repisa-t__top::before,
+        .repisa-b__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.75), transparent);
+        }
+
+        .repisa-t__bottom,
+        .repisa-b__bottom {
+            width: 1.5vw;
+            height: 10vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1.5vw);
+        }
+
+        .repisa-t__bottom::before,
+        .repisa-b__bottom::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.75), transparent);
+        }
+
+        .repisa-b {
+            transform: translateZ(5vw);
+        }
+
+        /* 电视 */
+        .tv {
+            position: absolute;
+            left: 1.51vw;
+            top: 8vw;
+            width: .5vw;
+            height: 12vw;
+            transform: translateZ(8vw);
+        }
+
+        .tv__front {
+            width: 0.5vw;
+            height: 6vw;
+            background-color: var(--black-3);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(6vw - (6vw * 2)));
+        }
+
+        .tv__back {
+            width: 0.5vw;
+            height: 6vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.5vw) translateY(-6vw);
+        }
+
+        .tv__right {
+            width: 12vw;
+            height: 6vw;
+            background-color: #87CEEB;
+            border: .125vw solid #0a0c19;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.5vw) translateX(-12vw) translateY(-6vw);
+            animation: pantalla-tv .25s infinite alternate;
+        }
+
+        .tv__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            box-shadow: .125vw .125vw 1vw rgba(84, 116, 251, 0.5),
+                        -.125vw .125vw 1vw rgba(84, 116, 251, 0.5),
+                        .125vw -.125vw 1vw rgba(84, 116, 251, 0.5),
+                        -.125vw -.125vw 1vw rgba(84, 116, 251, 0.5);
+            background-image: url('https://rawcdn.githack.com/ricardoolivaalonso/Codepen/43200238c3177b02a97423fa6cc23f8bfcc5c105/Room/gif.gif');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            opacity: .8;
+        }
+
+        .tv__left {
+            width: 12vw;
+            height: 6vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-6vw);
+        }
+
+        .tv__left::before {
+            content: '';
+            position: absolute;
+            width: 13vw;
+            height: 7vw;
+            background-image: radial-gradient(rgba(30, 50, 200, 0.95), rgba(74, 106, 241, 0.95));
+            filter: blur(1.25vw);
+            animation: luz-tv .25s infinite alternate;
+        }
+
+        .tv__top {
+            width: 0.5vw;
+            height: 12vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: translateZ(6vw);
+        }
+
+        .tv__bottom {
+            width: 0.5vw;
+            height: 12vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.5vw);
+        }
+
+        /* 书架 */
+        .librero {
+            position: absolute;
+            left: 13vw;
+            top: 1vw;
+            width: 12vw;
+            height: .5vw;
+            transform: translateZ(7vw);
+        }
+
+        .librero__front {
+            width: 12vw;
+            height: 0.25vw;
+            background-color: var(--white-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.25vw - (0.75vw * 2)));
+        }
+
+        .librero__back {
+            width: 12vw;
+            height: 0.25vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-12vw) translateY(-0.25vw);
+        }
+
+        .librero__back::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4vw;
+            border-radius: 50%;
+            background-image: radial-gradient(rgba(135, 160, 255, 0.7) 50%, rgba(40, 60, 210, 0.6), transparent);
+            filter: blur(1.25vw);
+        }
+
+        .librero__right {
+            width: 1.5vw;
+            height: 0.25vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(12vw) translateX(-1.5vw) translateY(-0.25vw);
+        }
+
+        .librero__left {
+            width: 1.5vw;
+            height: 0.25vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.25vw);
+        }
+
+        .librero__top {
+            width: 12vw;
+            height: 1.5vw;
+            background-color: #E6E5F0;
+            transform-origin: top left;
+            transform: translateZ(0.25vw);
+        }
+
+        .librero__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.75), transparent);
+        }
+
+        .librero__bottom {
+            width: 12vw;
+            height: 1.5vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-12vw);
+        }
+
+        .librero__bottom::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.75), transparent);
+        }
+
+        /* 书籍 */
+        .libros {
+            position: absolute;
+        }
+
+        .libro {
+            position: absolute;
+            top: 1vw;
+            width: .5vw;
+            height: 1vw;
+            transform: translateZ(7.25vw);
+        }
+
+        .libro__front {
+            width: 0.5vw;
+            height: 1.5vw;
+            background-image: linear-gradient(to bottom, var(--white-2), #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(1.5vw - (0.5vw * 2)));
+        }
+
+        .libro__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.4), transparent);
+        }
+
+        .libro__back {
+            width: 0.5vw;
+            height: 1.5vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.5vw) translateY(-1.5vw);
+        }
+
+        .libro__right {
+            width: 1vw;
+            height: 1.5vw;
+            background-color: #7A75A1;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.5vw) translateX(-1vw) translateY(-1.5vw);
+        }
+
+        .libro__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.85), rgba(40, 60, 210, 0.35));
+        }
+
+        .libro__left {
+            width: 1vw;
+            height: 1.5vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-1.5vw);
+        }
+
+        .libro__top {
+            width: 0.5vw;
+            height: 1vw;
+            background-color: #E6E5F0;
+            transform-origin: top left;
+            transform: translateZ(1.5vw);
+        }
+
+        .libro__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.85), rgba(40, 60, 210, 0.35));
+        }
+
+        .libro__bottom {
+            width: 0.5vw;
+            height: 1vw;
+            background-color: #4A456B;
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.5vw);
+        }
+
+        .libro:nth-of-type(1) {
+            left: 16vw;
+            transform-origin: left;
+            transform: translateZ(7.25vw) rotateZ(-10deg);
+        }
+
+        .libro:nth-of-type(2) {
+            left: 17vw;
+            transform: translateZ(7.25vw) rotateZ(2deg);
+        }
+
+        .libro:nth-of-type(3) {
+            left: 17.75vw;
+            transform: translateZ(7.25vw) rotateZ(5deg);
+        }
+
+        .libro:nth-of-type(4) {
+            left: 19vw;
+            transform-origin: left;
+            transform: translateZ(7.25vw) rotateZ(10deg);
+        }
+
+        .libro:nth-of-type(5) {
+            left: 20vw;
+            transform-origin: left;
+            transform: translateZ(7.25vw) rotateZ(10deg);
+        }
+
+        .libro:nth-of-type(6) {
+            left: 23vw;
+            transform-origin: left;
+            transform: translateZ(7.25vw) rotateY(-90deg);
+        }
+
+        /* 照片 */
+        .fotos {
+            position: absolute;
+        }
+
+        .foto {
+            position: absolute;
+            width: .125vw;
+            height: 2vw;
+            left: 2vw;
+            top: 11vw;
+            transform: translateZ(5.26vw);
+        }
+
+        .foto__front {
+            width: 0.125vw;
+            height: 1.125vw;
+            background-image: linear-gradient(to bottom, var(--white-2), #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(1.125vw - (1.125vw * 2)));
+        }
+
+        .foto__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.4), transparent);
+        }
+
+        .foto__back {
+            width: 0.125vw;
+            height: 1.125vw;
+            background-color: var(--white-1);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.125vw) translateY(-1.125vw);
+        }
+
+        .foto__right {
+            width: 2.25vw;
+            height: 1.125vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #8A85B1;
+            border: .15vw solid var(--black-1);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.125vw) translateX(-2.25vw) translateY(-1.125vw);
+        }
+
+        .foto__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(to bottom, var(--white-2) .1vw, #E6E5F0 .2vw);
+        }
+
+        .foto__left {
+            width: 2.25vw;
+            height: 1.125vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-1.125vw);
+        }
+
+        .foto__top {
+            width: 0.125vw;
+            height: 2.25vw;
+            background-color: #E6E5F0;
+            transform-origin: top left;
+            transform: translateZ(1.125vw);
+        }
+
+        .foto__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.85), rgba(40, 60, 210, 0.35));
+        }
+
+        .foto__bottom {
+            width: 0.125vw;
+            height: 2.25vw;
+            background-color: #5A557B;
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.125vw);
+        }
+
+        .foto__bottom::before {
+            content: '';
+            position: absolute;
+            right: -100%;
+            width: 400%;
+            height: 100%;
+            background-color: rgba(15, 17, 30, 0.75);
+            filter: blur(.15vw);
+        }
+
+        .foto:nth-of-type(1) {
+            top: 10.5vw;
+            transform: translateZ(5.26vw) rotateZ(5deg);
+        }
+
+        .foto:nth-of-type(2) {
+            top: 15vw;
+            transform: translateZ(5.26vw) rotateZ(-15deg);
+        }
+
+        /* 盒子 */
+        .cajas {
+            position: absolute;
+        }
+
+        .caja {
+            position: absolute;
+            width: 1vw;
+            height: 1.5vw;
+            left: 2vw;
+            transform: translateZ(16.35vw);
+        }
+
+        .caja__front {
+            width: 1vw;
+            height: 0.75vw;
+            background-image: linear-gradient(to bottom, var(--white-2), #8A85B1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.75vw - (0.75vw * 2)));
+        }
+
+        .caja__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.4), transparent);
+        }
+
+        .caja__back {
+            width: 1vw;
+            height: 0.75vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-0.75vw);
+        }
+
+        .caja__right {
+            width: 1.5vw;
+            height: 0.75vw;
+            background-color: #7A75A1;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-1.5vw) translateY(-0.75vw);
+        }
+
+        .caja__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.85), rgba(40, 60, 210, 0.35));
+        }
+
+        .caja__left {
+            width: 1.5vw;
+            height: 0.75vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.75vw);
+        }
+
+        .caja__top {
+            width: 1vw;
+            height: 1.5vw;
+            background-color: #E6E5F0;
+            transform-origin: top left;
+            transform: translateZ(0.75vw);
+        }
+
+        .caja__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(84, 116, 251, 0.85), rgba(40, 60, 210, 0.35));
+        }
+
+        .caja__bottom {
+            width: 1vw;
+            height: 1.5vw;
+            background-color: #5A557B;
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        .caja__bottom::before {
+            content: '';
+            position: absolute;
+            right: -50%;
+            width: 150%;
+            height: 120%;
+            background-color: rgba(31, 33, 88, 0.5);
+            filter: blur(.15vw);
+        }
+
+        .caja:nth-of-type(1) {
+            top: 11.6vw;
+        }
+
+        .caja:nth-of-type(2) {
+            top: 13.5vw;
+        }
+
+        .caja:nth-of-type(3) {
+            top: 17vw;
+        }
+
+        /* 装饰画 */
+        .cuadro-l,
+        .cuadro-r {
+            position: absolute;
+            left: 13vw;
+            top: 1vw;
+            width: 5vw;
+            height: .5vw;
+            transform: translateZ(10vw);
+        }
+
+        .cuadro-l__front,
+        .cuadro-r__front {
+            width: 5vw;
+            height: 7vw;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(7vw - (0.125vw * 2)));
+        }
+
+        .cuadro-l__back,
+        .cuadro-r__back {
+            width: 5vw;
+            height: 7vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-5vw) translateY(-7vw);
+            box-shadow: .35vw .35vw .35vw rgba(84, 116, 251, 0.2),
+                        -.35vw .35vw .35vw rgba(84, 116, 251, 0.2),
+                        -.35vw -.35vw .35vw rgba(84, 116, 251, 0.2),
+                        .35vw -.35vw .35vw rgba(84, 116, 251, 0.2);
+        }
+
+        .cuadro-l__right,
+        .cuadro-r__right {
+            width: 0.25vw;
+            height: 7vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(5vw) translateX(-0.25vw) translateY(-7vw);
+        }
+
+        .cuadro-l__left,
+        .cuadro-r__left {
+            width: 0.25vw;
+            height: 7vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-7vw);
+        }
+
+        .cuadro-l__top,
+        .cuadro-r__top {
+            width: 5vw;
+            height: 0.25vw;
+            background-color: var(--white-2);
+            transform-origin: top left;
+            transform: translateZ(7vw);
+        }
+
+        .cuadro-l__bottom,
+        .cuadro-r__bottom {
+            width: 5vw;
+            height: 0.25vw;
+            background-color: var(--white-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-5vw);
+        }
+
+        .cuadro-l__front {
+            background-image: url('https://rawcdn.githack.com/ricardoolivaalonso/Codepen/43200238c3177b02a97423fa6cc23f8bfcc5c105/Room/cuadro-1.jpg');
+            background-color: var(--cuadro-1);
+            border: 1vw solid var(--cuadro-1);
+        }
+
+        .cuadro-l__front::before {
+            content: '';
+            position: absolute;
+            top: -1vw;
+            left: -1vw;
+            width: 5vw;
+            height: 7vw;
+            background-origin: padding-box;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.15), rgba(40, 60, 210, 0.15));
+        }
+
+        .cuadro-r {
+            left: 20vw;
+        }
+
+        .cuadro-r__front {
+            background-image: url('https://rawcdn.githack.com/ricardoolivaalonso/Codepen/43200238c3177b02a97423fa6cc23f8bfcc5c105/Room/cuadro-2.jpg');
+            background-color: var(--cuadro-2);
+            border: .5vw solid var(--cuadro-2);
+        }
+
+        .cuadro-r__front::before {
+            content: '';
+            position: absolute;
+            top: -.5vw;
+            left: -.5vw;
+            width: 5vw;
+            height: 7vw;
+            background-origin: padding-box;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.15), rgba(40, 60, 210, 0.15));
+        }
+
+        /* 门 */
+        .puerta-c {
+            position: absolute;
+            left: 3vw;
+            top: 1vw;
+            width: 8vw;
+            height: .5vw;
+            transform: translateZ(.5vw);
+        }
+
+        .puerta-c::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 200%;
+            background-color: rgba(22, 24, 56, 0.65);
+            filter: blur(.5vw);
+        }
+
+        .puerta {
+            position: absolute;
+            left: .5vw;
+            top: 0;
+            width: 7vw;
+            height: .5vw;
+        }
+
+        .puerta__front {
+            width: 7vw;
+            height: 16vw;
+            background-image: linear-gradient(to bottom, var(--cuadro-2), var(--black-2));
+            border: .125vw solid var(--neon-1);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(16vw - (0.125vw * 2)));
+        }
+
+        .puerta__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(transparent 50%, rgba(40, 60, 210, 0.25));
+            box-shadow: .65vw .65vw .5vw rgba(84, 116, 251, 0.6),
+                        -.65vw .65vw .5vw rgba(84, 116, 251, 0.6),
+                        -.65vw -.65vw .5vw rgba(84, 116, 251, 0.6),
+                        .65vw -.65vw .5vw rgba(84, 116, 251, 0.6);
+        }
+
+        .puerta__front::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: .75vw;
+            width: 1vw;
+            height: .25vw;
+            background-color: var(--white-2);
+            box-shadow: .125vw .125vw .25vw rgba(84, 116, 251, 0.6),
+                        -.125vw .125vw .25vw rgba(84, 116, 251, 0.6),
+                        -.125vw -.125vw .25vw rgba(84, 116, 251, 0.6),
+                        .125vw -.125vw .25vw rgba(84, 116, 251, 0.6);
+        }
+
+        .puerta-l,
+        .puerta-r {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: .5vw;
+            height: .5vw;
+        }
+
+        .puerta-l__front,
+        .puerta-r__front {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: #1a1c48;
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(16vw - (0.25vw * 2)));
+        }
+
+        .puerta-l__back,
+        .puerta-r__back {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.5vw) translateY(-16vw);
+        }
+
+        .puerta-l__right,
+        .puerta-r__right {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.5vw) translateX(-0.5vw) translateY(-16vw);
+        }
+
+        .puerta-l__left,
+        .puerta-r__left {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: var(--black-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-16vw);
+        }
+
+        .puerta-l__bottom,
+        .puerta-r__bottom {
+            width: 0.5vw;
+            height: 0.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.5vw);
+        }
+
+        .puerta-r {
+            left: calc(100% - .5vw);
+        }
+
+        .puerta-t {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 8vw;
+            height: .5vw;
+            transform: translateZ(16vw);
+        }
+
+        .puerta-t__front {
+            width: 8vw;
+            height: 0.5vw;
+            background-color: #1a1c48;
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.5vw - (0.25vw * 2)));
+        }
+
+        .puerta-t__back {
+            width: 8vw;
+            height: 0.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-8vw) translateY(-0.5vw);
+        }
+
+        .puerta-t__right {
+            width: 0.5vw;
+            height: 0.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(8vw) translateX(-0.5vw) translateY(-0.5vw);
+        }
+
+        .puerta-t__left {
+            width: 0.5vw;
+            height: 0.5vw;
+            background-color: var(--black-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.5vw);
+        }
+
+        .puerta-t__top {
+            width: 8vw;
+            height: 0.5vw;
+            background-color: var(--black-1);
+            transform-origin: top left;
+            transform: translateZ(0.5vw);
+        }
+
+        .puerta-t__bottom {
+            width: 8vw;
+            height: 0.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-8vw);
+        }
+
+        /* 墙 */
+        .muro {
+            position: absolute;
+            left: 1vw;
+            top: 6vw;
+            width: .5vw;
+            height: 16vw;
+            transform: translateZ(.51vw);
+        }
+
+        .muro__front {
+            width: 0.5vw;
+            height: 18vw;
+            background-color: var(--black-3);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(18vw - (8vw * 2)));
+        }
+
+        .muro__back {
+            width: 0.5vw;
+            height: 18vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.5vw) translateY(-18vw);
+        }
+
+        .muro__right {
+            width: 16vw;
+            height: 18vw;
+            display: flex;
+            justify-content: center;
+            background-image: radial-gradient(circle, var(--black-1), #1a1c48);
+            overflow: hidden;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.5vw) translateX(-16vw) translateY(-18vw);
+        }
+
+        .muro__right::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.25), transparent 30%, transparent 70%, rgba(40, 60, 210, 0.15));
+        }
+
+        .muro__right::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 25%;
+            background-image: linear-gradient(to bottom, rgba(22, 24, 56, 0.75), rgba(22, 24, 56, 0.95));
+            filter: blur(.75vw);
+        }
+
+        .muro__left {
+            width: 16vw;
+            height: 18vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-18vw);
+            box-shadow: .5vw .5vw .6vw rgba(84, 116, 251, 0.3),
+                        .5vw -.5vw .6vw rgba(84, 116, 251, 0.3),
+                        -.5vw .5vw .6vw rgba(84, 116, 251, 0.3),
+                        -.5vw -.5vw .6vw rgba(84, 116, 251, 0.3);
+        }
+
+        .muro__top {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: translateZ(18vw);
+        }
+
+        .muro__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            background-image: linear-gradient(to left, rgba(40, 60, 210, 0.5), rgba(84, 116, 251, 0.25));
+        }
+
+        .muro__bottom {
+            width: 0.5vw;
+            height: 16vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.5vw);
+        }
+
+        .muro__bottom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5vw;
+            height: 100%;
+            background-image: linear-gradient(to left, var(--black-3), transparent 50%);
+            transform-origin: right bottom;
+            transform: skewY(-20deg);
+            filter: blur(.25vw);
+        }
+
+        /* 沙发 */
+        .sillon-c {
+            position: absolute;
+            right: 2vw;
+            bottom: 6vw;
+            width: 6vw;
+            height: 16vw;
+            transform: translateZ(.5vw);
+        }
+
+        .sillon-c::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-color: rgba(22, 24, 56, 0.85);
+            filter: blur(.75vw);
+        }
+
+        .sillon-b {
+            position: absolute;
+            left: 0;
+            top: 1vw;
+            width: 6vw;
+            height: 14vw;
+        }
+
+        .sillon-b__front {
+            width: 6vw;
+            height: 3vw;
+            background-color: var(--black-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(3vw - (7vw * 2)));
+        }
+
+        .sillon-b__back {
+            width: 6vw;
+            height: 3vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-6vw) translateY(-3vw);
+        }
+
+        .sillon-b__right {
+            width: 14vw;
+            height: 3vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(6vw) translateX(-14vw) translateY(-3vw);
+        }
+
+        .sillon-b__left {
+            width: 14vw;
+            height: 3vw;
+            background-image: linear-gradient(to bottom, var(--black-2), #1a1c48);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-3vw);
+        }
+
+        .sillon-b__left::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(40, 60, 210, 0.1), transparent);
+        }
+
+        .sillon-b__top {
+            width: 6vw;
+            height: 14vw;
+            background-image: linear-gradient(to right, var(--black-1), var(--black-2));
+            border-left: .1vw solid rgba(158, 153, 193, 0.5);
+            transform-origin: top left;
+            transform: translateZ(3vw);
+        }
+
+        .sillon-b__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.25), transparent);
+        }
+
+        .sillon-b__bottom {
+            width: 6vw;
+            height: 14vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-6vw);
+        }
+
+        .sillon-l,
+        .sillon-r {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 6vw;
+            height: 1vw;
+        }
+
+        .sillon-l__front,
+        .sillon-r__front {
+            width: 6vw;
+            height: 4.5vw;
+            background-image: linear-gradient(to bottom, var(--black-2), var(--black-3));
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(4.5vw - (0.5vw * 2)));
+        }
+
+        .sillon-l__back,
+        .sillon-r__back {
+            width: 6vw;
+            height: 4.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-6vw) translateY(-4.5vw);
+        }
+
+        .sillon-l__right,
+        .sillon-r__right {
+            width: 1vw;
+            height: 4.5vw;
+            background-image: linear-gradient(to bottom, var(--black-3), #161426);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(6vw) translateX(-1vw) translateY(-4.5vw);
+        }
+
+        .sillon-l__left,
+        .sillon-r__left {
+            width: 1vw;
+            height: 4.5vw;
+            background-image: linear-gradient(to bottom, var(--black-2), #1a1c48);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-4.5vw);
+        }
+
+        .sillon-l__top,
+        .sillon-r__top {
+            width: 6vw;
+            height: 1vw;
+            background-image: linear-gradient(to right, var(--black-1), #1a1c48);
+            border-bottom: .1vw solid rgba(158, 153, 193, 0.5);
+            transform-origin: top left;
+            transform: translateZ(4.5vw);
+        }
+
+        .sillon-l__top::before,
+        .sillon-r__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.75), transparent);
+        }
+
+        .sillon-l__bottom,
+        .sillon-r__bottom {
+            width: 6vw;
+            height: 1vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-6vw);
+        }
+
+        .sillon-r {
+            top: 0;
+        }
+
+        .sillon-t {
+            position: absolute;
+            right: 0;
+            top: 1vw;
+            width: 1vw;
+            height: 1vw;
+            transform-origin: right;
+            transform: rotateY(7deg);
+        }
+
+        .sillon-t__front {
+            width: 1vw;
+            height: 6.5vw;
+            background-image: linear-gradient(to bottom, var(--black-3), #1a1c48);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(6.5vw - (7vw * 2)));
+        }
+
+        .sillon-t__back {
+            width: 1vw;
+            height: 6.5vw;
+            background-image: linear-gradient(to bottom, #1a1c48, var(--black-3));
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1vw) translateY(-6.5vw);
+        }
+
+        .sillon-t__right {
+            width: 14vw;
+            height: 6.5vw;
+            background-image: linear-gradient(to bottom, #1a1c48, #161426);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1vw) translateX(-14vw) translateY(-6.5vw);
+        }
+
+        .sillon-t__left {
+            width: 14vw;
+            height: 6.5vw;
+            background-color: var(--black-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-6.5vw);
+        }
+
+        .sillon-t__top {
+            width: 1vw;
+            height: 14vw;
+            background-image: linear-gradient(to right, var(--black-1), #1a1c48);
+            border-bottom: .1vw solid rgba(158, 153, 193, 0.5);
+            transform-origin: top left;
+            transform: translateZ(6.5vw);
+        }
+
+        .sillon-t__top::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(40, 60, 210, 0.5), transparent);
+        }
+
+        .sillon-t__bottom {
+            width: 1vw;
+            height: 14vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1vw);
+        }
+
+        /* 桌子 */
+        .mesa-c {
+            position: absolute;
+            left: 7vw;
+            top: 9.5vw;
+            width: 10vw;
+            height: 9vw;
+            transform: translateZ(.5vw);
+        }
+
+        .mesa-shadow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10%;
+            background-color: rgba(22, 24, 56, 0.95);
+            filter: blur(1vw);
+            transform: translateZ(0);
+        }
+
+        .mesa {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 10vw;
+            height: 9vw;
+            transform: translateZ(2vw);
+        }
+
+        .mesa__front {
+            width: 10vw;
+            height: 0.5vw;
+            background-image: linear-gradient(to right, #1a1c48, #161426);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.5vw - (4.5vw * 2)));
+        }
+
+        .mesa__front::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(45deg, rgba(84, 116, 251, 0.125), rgba(135, 160, 255, 0.25), transparent 55%);
+        }
+
+        .mesa__back {
+            width: 10vw;
+            height: 0.5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-10vw) translateY(-0.5vw);
+        }
+
+        .mesa__right {
+            width: 9vw;
+            height: 0.5vw;
+            background-color: #161426;
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(10vw) translateX(-9vw) translateY(-0.5vw);
+        }
+
+        .mesa__left {
+            width: 9vw;
+            height: 0.5vw;
+            background-color: var(--black-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.5vw);
+        }
+
+        .mesa__top {
+            width: 10vw;
+            height: 9vw;
+            background-image: linear-gradient(45deg, #1a1c48, #161838);
+            overflow: hidden;
+            transform-origin: top left;
+            transform: translateZ(0.5vw);
+        }
+
+        .mesa__top::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 50%;
+            height: 50%;
+            background-image: linear-gradient(45deg, rgba(84, 116, 251, 0.5), rgba(251, 250, 254, 0.125) 50%, transparent 55%);
+            filter: blur(.5vw);
+        }
+
+        .mesa__top::after {
+            content: '';
+            position: absolute;
+            left: 2vw;
+            top: 2vw;
+            width: 20%;
+            height: 50%;
+            border-radius: 50%;
+            background-color: rgba(40, 60, 210, 0.079);
+        }
+
+        .mesa-p {
+            position: absolute;
+            width: 0.5vw;
+            height: 0.5vw;
+        }
+
+        .mesa-p__front {
+            width: 0.5vw;
+            height: 2vw;
+            background-color: var(--black-2);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(2vw - (0.5vw * 2)));
+        }
+
+        .mesa-p__back {
+            width: 0.5vw;
+            height: 2vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-0.5vw) translateY(-2vw);
+        }
+
+        .mesa-p__right {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(0.5vw) translateX(-1vw) translateY(-2vw);
+        }
+
+        .mesa-p__left {
+            width: 1vw;
+            height: 2vw;
+            background-color: var(--black-2);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-2vw);
+        }
+
+        .mesa-p__top {
+            width: 0.5vw;
+            height: 1vw;
+            background-color: var(--black-1);
+            transform-origin: top left;
+            transform: translateZ(2vw);
+        }
+
+        .mesa-p__bottom {
+            width: 0.5vw;
+            height: 1vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-0.5vw);
+        }
+
+        .mesa-p:nth-child(1) {
+            bottom: 0;
+            left: 1vw;
+        }
+
+        .mesa-p:nth-child(2) {
+            bottom: 0;
+            right: 1vw;
+        }
+
+        .mesa-p:nth-child(3) {
+            bottom: 0;
+            left: 8vw;
+        }
+
+        .mesa-p:nth-child(4) {
+            bottom: 0;
+            right: 8vw;
+        }
+
+        /* 平板电脑 */
+        .tablet {
+            position: absolute;
+            width: 1.5vw;
+            height: 2.5vw;
+            left: 11.5vw;
+            top: 11.5vw;
+            transform: translateZ(2.5vw) rotateZ(-10deg);
+        }
+
+        .tablet__front {
+            width: 1.5vw;
+            height: 0.125vw;
+            background-color: var(--black-3);
+            transform-origin: bottom left;
+            transform: rotateX(-90deg) translateZ(-(0.125vw - (2.5vw * 2)));
+        }
+
+        .tablet__back {
+            width: 1.5vw;
+            height: 0.125vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateX(-90deg) rotateY(180deg) translateX(-1.5vw) translateY(-0.125vw);
+        }
+
+        .tablet__right {
+            width: 5vw;
+            height: 0.125vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(90deg) rotateZ(-90deg) translateZ(1.5vw) translateX(-5vw) translateY(-0.125vw);
+        }
+
+        .tablet__left {
+            width: 5vw;
+            height: 0.125vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.125vw);
+        }
+
+        .tablet__top {
+            width: 1.5vw;
+            height: 5vw;
+            background-color: #87CEEB;
+            border: .125vw solid var(--black-3);
+            transform-origin: top left;
+            transform: translateZ(0.125vw);
+        }
+
+        .tablet__top::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+        }
+
+        .tablet__bottom {
+            width: 1.5vw;
+            height: 5vw;
+            background-color: var(--black-3);
+            transform-origin: top left;
+            transform: rotateY(180deg) translateX(-1.5vw);
+        }
+
+        /* 动画 */
+        @keyframes pantalla-tv {
+            0% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes luz-tv {
+            0% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 0.9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D 房间 -->
+    <div class="house">
+        <!-- 光照效果 -->
+        <div class="h-lights">
+            <div class="h-light"></div>
+            <div class="h-light"></div>
+            <div class="h-light"></div>
+            <div class="h-light"></div>
+            <div class="h-light"></div>
+            <div class="h-light"></div>
+        </div>
+
+        <!-- 阴影效果 -->
+        <div class="h-shadow"></div>
+
+        <!-- 墙壁结构 -->
+        <div class="alt">
+            <div class="alt__front face"></div>
+            <div class="alt__back face"></div>
+            <div class="alt__right face"></div>
+            <div class="alt__left face"></div>
+            <div class="alt__top face">
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+                <div class="light"></div>
+            </div>
+            <div class="alt__bottom face"></div>
+        </div>
+
+        <div class="alb">
+            <div class="alb__front face"></div>
+            <div class="alb__back face"></div>
+            <div class="alb__right face"></div>
+            <div class="alb__left face"></div>
+            <div class="alb__top face"></div>
+            <div class="alb__bottom face"></div>
+        </div>
+
+        <div class="arb">
+            <div class="arb__front face"></div>
+            <div class="arb__back face"></div>
+            <div class="arb__right face"></div>
+            <div class="arb__left face"></div>
+            <div class="arb__top face"></div>
+            <div class="arb__bottom face"></div>
+        </div>
+
+        <div class="blt">
+            <div class="blt__front face"></div>
+            <div class="blt__back face"></div>
+            <div class="blt__right face"></div>
+            <div class="blt__left face"></div>
+            <div class="blt__bottom face"></div>
+        </div>
+
+        <div class="blt2">
+            <div class="blt2__front face"></div>
+            <div class="blt2__back face"></div>
+            <div class="blt2__right face"></div>
+            <div class="blt2__left face"></div>
+            <div class="blt2__top face"></div>
+            <div class="blt2__bottom face"></div>
+        </div>
+
+        <div class="blb">
+            <div class="blb__front face"></div>
+            <div class="blb__back face"></div>
+            <div class="blb__right face"></div>
+            <div class="blb__bottom face"></div>
+        </div>
+
+        <div class="blb2">
+            <div class="blb2__front face"></div>
+            <div class="blb2__back face"></div>
+            <div class="blb2__right face"></div>
+            <div class="blb2__left face"></div>
+            <div class="blb2__top face"></div>
+            <div class="blb2__bottom face"></div>
+        </div>
+
+        <!-- 扬声器 -->
+        <div class="bocina-l">
+            <div class="bocina-l__front face"></div>
+            <div class="bocina-l__back face"></div>
+            <div class="bocina-l__right face"></div>
+            <div class="bocina-l__left face"></div>
+            <div class="bocina-l__top face"></div>
+            <div class="bocina-l__bottom face"></div>
+        </div>
+
+        <div class="bocina-r">
+            <div class="bocina-r__front face"></div>
+            <div class="bocina-r__back face"></div>
+            <div class="bocina-r__right face"></div>
+            <div class="bocina-r__left face"></div>
+            <div class="bocina-r__top face"></div>
+            <div class="bocina-r__bottom face"></div>
+        </div>
+
+        <!-- 搁板 -->
+        <div class="repisa-t">
+            <div class="repisa-t__front face"></div>
+            <div class="repisa-t__back face"></div>
+            <div class="repisa-t__right face"></div>
+            <div class="repisa-t__left face"></div>
+            <div class="repisa-t__top face"></div>
+            <div class="repisa-t__bottom face"></div>
+        </div>
+
+        <div class="repisa-b">
+            <div class="repisa-b__front face"></div>
+            <div class="repisa-b__back face"></div>
+            <div class="repisa-b__right face"></div>
+            <div class="repisa-b__left face"></div>
+            <div class="repisa-b__top face"></div>
+            <div class="repisa-b__bottom face"></div>
+        </div>
+
+        <!-- 电视 -->
+        <div class="tv">
+            <div class="tv__front face"></div>
+            <div class="tv__back face"></div>
+            <div class="tv__right face"></div>
+            <div class="tv__left face"></div>
+            <div class="tv__top face"></div>
+            <div class="tv__bottom face"></div>
+        </div>
+
+        <!-- 书架 -->
+        <div class="librero">
+            <div class="librero__front face"></div>
+            <div class="librero__back face"></div>
+            <div class="librero__right face"></div>
+            <div class="librero__left face"></div>
+            <div class="librero__top face"></div>
+            <div class="librero__bottom face"></div>
+        </div>
+
+        <!-- 书籍 -->
+        <div class="libros">
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+            <div class="libro">
+                <div class="libro__front face"></div>
+                <div class="libro__back face"></div>
+                <div class="libro__right face"></div>
+                <div class="libro__left face"></div>
+                <div class="libro__top face"></div>
+                <div class="libro__bottom face"></div>
+            </div>
+        </div>
+
+        <!-- 照片 -->
+        <div class="fotos">
+            <div class="foto">
+                <div class="foto__front face"></div>
+                <div class="foto__back face"></div>
+                <div class="foto__right face"></div>
+                <div class="foto__left face"></div>
+                <div class="foto__top face"></div>
+                <div class="foto__bottom face"></div>
+            </div>
+            <div class="foto">
+                <div class="foto__front face"></div>
+                <div class="foto__back face"></div>
+                <div class="foto__right face"></div>
+                <div class="foto__left face"></div>
+                <div class="foto__top face"></div>
+                <div class="foto__bottom face"></div>
+            </div>
+        </div>
+
+        <!-- 盒子 -->
+        <div class="cajas">
+            <div class="caja">
+                <div class="caja__front face"></div>
+                <div class="caja__back face"></div>
+                <div class="caja__right face"></div>
+                <div class="caja__left face"></div>
+                <div class="caja__top face"></div>
+                <div class="caja__bottom face"></div>
+            </div>
+            <div class="caja">
+                <div class="caja__front face"></div>
+                <div class="caja__back face"></div>
+                <div class="caja__right face"></div>
+                <div class="caja__left face"></div>
+                <div class="caja__top face"></div>
+                <div class="caja__bottom face"></div>
+            </div>
+            <div class="caja">
+                <div class="caja__front face"></div>
+                <div class="caja__back face"></div>
+                <div class="caja__right face"></div>
+                <div class="caja__left face"></div>
+                <div class="caja__top face"></div>
+                <div class="caja__bottom face"></div>
+            </div>
+        </div>
+
+        <!-- 装饰画 -->
+        <div class="cuadro-l">
+            <div class="cuadro-l__front face"></div>
+            <div class="cuadro-l__back face"></div>
+            <div class="cuadro-l__right face"></div>
+            <div class="cuadro-l__left face"></div>
+            <div class="cuadro-l__top face"></div>
+            <div class="cuadro-l__bottom face"></div>
+        </div>
+
+        <div class="cuadro-r">
+            <div class="cuadro-r__front face"></div>
+            <div class="cuadro-r__back face"></div>
+            <div class="cuadro-r__right face"></div>
+            <div class="cuadro-r__left face"></div>
+            <div class="cuadro-r__top face"></div>
+            <div class="cuadro-r__bottom face"></div>
+        </div>
+
+        <!-- 门 -->
+        <div class="puerta-c">
+            <div class="puerta">
+                <div class="puerta__front face"></div>
+            </div>
+            <div class="puerta-l">
+                <div class="puerta-l__front face"></div>
+                <div class="puerta-l__back face"></div>
+                <div class="puerta-l__right face"></div>
+                <div class="puerta-l__left face"></div>
+                <div class="puerta-l__bottom face"></div>
+            </div>
+            <div class="puerta-r">
+                <div class="puerta-r__front face"></div>
+                <div class="puerta-r__back face"></div>
+                <div class="puerta-r__right face"></div>
+                <div class="puerta-r__left face"></div>
+                <div class="puerta-r__bottom face"></div>
+            </div>
+            <div class="puerta-t">
+                <div class="puerta-t__front face"></div>
+                <div class="puerta-t__back face"></div>
+                <div class="puerta-t__right face"></div>
+                <div class="puerta-t__left face"></div>
+                <div class="puerta-t__top face"></div>
+                <div class="puerta-t__bottom face"></div>
+            </div>
+        </div>
+
+        <!-- 墙 -->
+        <div class="muro">
+            <div class="muro__front face"></div>
+            <div class="muro__back face"></div>
+            <div class="muro__right face"></div>
+            <div class="muro__left face"></div>
+            <div class="muro__top face"></div>
+            <div class="muro__bottom face"></div>
+        </div>
+
+        <!-- 沙发 -->
+        <div class="sillon-c">
+            <div class="sillon-b">
+                <div class="sillon-b__front face"></div>
+                <div class="sillon-b__back face"></div>
+                <div class="sillon-b__right face"></div>
+                <div class="sillon-b__left face"></div>
+                <div class="sillon-b__top face"></div>
+                <div class="sillon-b__bottom face"></div>
+            </div>
+            <div class="sillon-t">
+                <div class="sillon-t__front face"></div>
+                <div class="sillon-t__back face"></div>
+                <div class="sillon-t__right face"></div>
+                <div class="sillon-t__left face"></div>
+                <div class="sillon-t__top face"></div>
+                <div class="sillon-t__bottom face"></div>
+            </div>
+            <div class="sillon-l">
+                <div class="sillon-l__front face"></div>
+                <div class="sillon-l__back face"></div>
+                <div class="sillon-l__right face"></div>
+                <div class="sillon-l__left face"></div>
+                <div class="sillon-l__top face"></div>
+                <div class="sillon-l__bottom face"></div>
+            </div>
+            <div class="sillon-r">
+                <div class="sillon-r__front face"></div>
+                <div class="sillon-r__back face"></div>
+                <div class="sillon-r__right face"></div>
+                <div class="sillon-r__left face"></div>
+                <div class="sillon-r__top face"></div>
+                <div class="sillon-r__bottom face"></div>
+            </div>
+        </div>
+
+        <!-- 桌子 -->
+        <div class="mesa-c">
+            <div class="mesa-shadow"></div>
+            <div class="mesa">
+                <div class="mesa__front face"></div>
+                <div class="mesa__back face"></div>
+                <div class="mesa__right face"></div>
+                <div class="mesa__left face"></div>
+                <div class="mesa__top face"></div>
+            </div>
+            <div class="mesa-p">
+                <div class="mesa-p__front face"></div>
+                <div class="mesa-p__back face"></div>
+                <div class="mesa-p__right face"></div>
+                <div class="mesa-p__left face"></div>
+                <div class="mesa-p__top face"></div>
+                <div class="mesa-p__bottom face"></div>
+            </div>
+            <div class="mesa-p">
+                <div class="mesa-p__front face"></div>
+                <div class="mesa-p__back face"></div>
+                <div class="mesa-p__right face"></div>
+                <div class="mesa-p__left face"></div>
+                <div class="mesa-p__top face"></div>
+                <div class="mesa-p__bottom face"></div>
+            </div>
+            <div class="mesa-p">
+                <div class="mesa-p__front face"></div>
+                <div class="mesa-p__back face"></div>
+                <div class="mesa-p__right face"></div>
+                <div class="mesa-p__left face"></div>
+                <div class="mesa-p__top face"></div>
+                <div class="mesa-p__bottom face"></div>
+            </div>
+            <div class="mesa-p">
+                <div class="mesa-p__front face"></div>
+                <div class="mesa-p__back face"></div>
+                <div class="mesa-p__right face"></div>
+                <div class="mesa-p__left face"></div>
+                <div class="mesa-p__top face"></div>
+                <div class="mesa-p__bottom face"></div>
+            </div>
+            <div class="tablet">
+                <div class="tablet__front face"></div>
+                <div class="tablet__back face"></div>
+                <div class="tablet__right face"></div>
+                <div class="tablet__left face"></div>
+                <div class="tablet__top face"></div>
+                <div class="tablet__bottom face"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
